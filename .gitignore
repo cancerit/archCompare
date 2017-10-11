@@ -1,0 +1,11 @@
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.coverage
+cover/
+/.eggs
+/build
+/dist
+/archCompare.egg-info
+*.log
