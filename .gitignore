@@ -9,3 +9,4 @@ cover/
 /dist
 /archCompare.egg-info
 *.log
+results.tsv

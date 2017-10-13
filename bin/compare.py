@@ -34,7 +34,7 @@ def main():
         optParser.print_help()
         sys.exit( 1 )
     opts=optParser.parse_args()
-    print('Running analysis, please check log file for any errors')
+    print("Running analysis, please check log file for any errors \ndetailed results in results.tsv file")
     mycomp=ArchCompare(archive_a=opts.archive_a,archive_b=opts.archive_b,json_config=opts.json_config,cmp_type=opts.cmp_type)
     mycomp.run_comparison()
 

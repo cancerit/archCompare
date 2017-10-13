@@ -242,14 +242,17 @@ class ArchCompare(AbstractCompare):
         dicta=self._format_input(typea,self.file_a)
         dictb=self._format_input(typeb, self.file_b)
         results=self._get_sets_to_compare(dicta,dictb)
-        self._format_results(results)
+        self._format_results(results,dicta,dictb)
     
-    def _format_results(self,results):
-        print('FileKey\tStatus\tResults')
-        for key,value in results.items():
-            if value[1] == None:
-        		    value[1]='differ'
-            print(key,'\t','\t'.join(value))  
+    def _format_results(self,results,dicta,dictb):
+        with open('results.tsv','w') as f:
+           print('FileKey\tStatus\tResults')
+           f.write('Filea\tFileb\tStatus\tResults\n')
+           for key,value in results.items():
+               if value[1] == None:
+        		      value[1]='differ'
+               print(key,'\t','\t'.join(value))
+               f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key,['NA'])[0],dictb.get(key,['NA'])[0],value[0],value[1]) )
 
 
 
