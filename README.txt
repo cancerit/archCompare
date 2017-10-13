@@ -1,4 +1,4 @@
-# arcgComapre
+# archComapre
 This tool compares a pair of data structures [ files, directoris and archives ]
 Provides concise information about the archive content similarity and differences if any.
 
