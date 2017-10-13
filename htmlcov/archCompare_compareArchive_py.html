@@ -30,9 +30,9 @@
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
 
         <h2 class="stats">
-            209 statements &nbsp;
-            <span class="run hide_run shortkey_r button_toggle_run">148 run</span>
-            <span class="mis shortkey_m button_toggle_mis">61 missing</span>
+            205 statements &nbsp;
+            <span class="run hide_run shortkey_r button_toggle_run">146 run</span>
+            <span class="mis shortkey_m button_toggle_mis">59 missing</span>
             <span class="exc shortkey_x button_toggle_exc">0 excluded</span>
 
             
@@ -319,12 +319,10 @@
 <p id="n250" class="stm mis"><a href="#n250">250</a></p>
 <p id="n251" class="stm mis"><a href="#n251">251</a></p>
 <p id="n252" class="stm mis"><a href="#n252">252</a></p>
-<p id="n253" class="stm run hide_run"><a href="#n253">253</a></p>
-<p id="n254" class="stm mis"><a href="#n254">254</a></p>
-<p id="n255" class="stm run hide_run"><a href="#n255">255</a></p>
-<p id="n256" class="stm mis"><a href="#n256">256</a></p>
-<p id="n257" class="pln"><a href="#n257">257</a></p>
-<p id="n258" class="pln"><a href="#n258">258</a></p>
+<p id="n253" class="pln"><a href="#n253">253</a></p>
+<p id="n254" class="pln"><a href="#n254">254</a></p>
+<p id="n255" class="pln"><a href="#n255">255</a></p>
+<p id="n256" class="pln"><a href="#n256">256</a></p>
 
             </td>
             <td class="text">
@@ -365,17 +363,17 @@
 <p id="t35" class="stm run hide_run">    <span class="key">def</span> <span class="nam">_input_checker</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t36" class="stm run hide_run">        <span class="key">try</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t37" class="stm run hide_run">            <span class="key">if</span> <span class="nam">tarfile</span><span class="op">.</span><span class="nam">is_tarfile</span><span class="op">(</span><span class="nam">infile</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t38" class="stm run hide_run">                <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">"input is an archive:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t38" class="stm run hide_run">                <span class="nam">print</span><span class="op">(</span><span class="str">"input is an archive:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t39" class="stm run hide_run">                <span class="key">return</span> <span class="str">'tar'</span><span class="strut">&nbsp;</span></p>
 <p id="t40" class="pln">            <span class="key">else</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t41" class="stm run hide_run">                <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">"input is a file:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t41" class="stm run hide_run">                <span class="nam">print</span><span class="op">(</span><span class="str">"input is a file:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t42" class="stm run hide_run">                <span class="key">return</span> <span class="str">'file'</span><span class="strut">&nbsp;</span></p>
 <p id="t43" class="stm run hide_run">        <span class="key">except</span> <span class="nam">IsADirectoryError</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t44" class="stm run hide_run">            <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">"input is directory:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t44" class="stm run hide_run">            <span class="nam">print</span><span class="op">(</span><span class="str">"input is directory:"</span><span class="op">,</span><span class="nam">infile</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t45" class="stm run hide_run">            <span class="key">return</span> <span class="str">'dir'</span><span class="strut">&nbsp;</span></p>
 <p id="t46" class="stm mis">        <span class="key">except</span> <span class="nam">IOError</span> <span class="key">as</span> <span class="nam">ioe</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t47" class="stm mis">            <span class="nam">log</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="op">(</span><span class="str">'Error in reading input file: '</span><span class="op">,</span><span class="nam">ioe</span><span class="op">.</span><span class="nam">args</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t48" class="stm mis">            <span class="nam">sys</span><span class="op">.</span><span class="nam">exit</span><span class="op">(</span><span class="nam">ioe</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t47" class="stm mis">            <span class="nam">print</span><span class="op">(</span><span class="str">'Error in reading input file: '</span><span class="op">,</span><span class="nam">ioe</span><span class="op">.</span><span class="nam">args</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t48" class="stm mis">            <span class="nam">sys</span><span class="op">.</span><span class="nam">exit</span><span class="op">(</span><span class="num">1</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t49" class="pln">        <span class="key">else</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t50" class="stm mis">            <span class="nam">print</span><span class="op">(</span><span class="str">"Unknown file type"</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t51" class="stm mis">            <span class="key">return</span> <span class="key">None</span><span class="strut">&nbsp;</span></p>
@@ -390,10 +388,10 @@
 <p id="t60" class="stm mis">                    <span class="nam">self</span><span class="op">.</span><span class="nam">cmp_type</span><span class="op">=</span><span class="str">''</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">key</span> <span class="key">for</span> <span class="nam">key</span><span class="op">,</span><span class="nam">val</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cfg</span><span class="op">[</span><span class="str">'cmp_type'</span><span class="op">]</span><span class="op">.</span><span class="nam">items</span><span class="op">(</span><span class="op">)</span> <span class="key">if</span> <span class="nam">val</span><span class="op">.</span><span class="nam">upper</span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="str">'Y'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t61" class="stm mis">                    <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="str">'Using comaprison type from json config'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t62" class="stm mis">        <span class="key">except</span> <span class="nam">json</span><span class="op">.</span><span class="nam">JSONDecodeError</span> <span class="key">as</span> <span class="nam">jde</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t63" class="stm mis">            <span class="nam">log</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="op">(</span><span class="str">'json error'</span><span class="op">,</span><span class="nam">jde</span><span class="op">.</span><span class="nam">args</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t63" class="stm mis">            <span class="nam">print</span><span class="op">(</span><span class="op">(</span><span class="str">'json error'</span><span class="op">,</span><span class="nam">jde</span><span class="op">.</span><span class="nam">args</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t64" class="stm mis">            <span class="nam">sys</span><span class="op">.</span><span class="nam">exit</span><span class="op">(</span><span class="num">1</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t65" class="stm mis">        <span class="key">except</span> <span class="nam">FileNotFoundError</span> <span class="key">as</span> <span class="nam">fne</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t66" class="stm mis">            <span class="nam">log</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="op">(</span><span class="str">'Can not find json file'</span><span class="op">,</span><span class="nam">fne</span><span class="op">.</span><span class="nam">args</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t66" class="stm mis">            <span class="nam">print</span><span class="op">(</span><span class="str">'Can not find json file'</span><span class="op">,</span><span class="nam">fne</span><span class="op">.</span><span class="nam">args</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t67" class="stm mis">            <span class="nam">sys</span><span class="op">.</span><span class="nam">exit</span><span class="op">(</span><span class="num">1</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t68" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t69" class="stm run hide_run">    <span class="key">def</span> <span class="nam">_format_input</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span><span class="nam">ftype</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -417,7 +415,7 @@
 <p id="t87" class="stm mis">                <span class="nam">tmp_path</span><span class="op">=</span> <span class="nam">tempfile</span><span class="op">.</span><span class="nam">mkdtemp</span><span class="op">(</span><span class="nam">dir</span><span class="op">=</span><span class="str">"."</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t88" class="stm mis">                <span class="nam">tar</span><span class="op">.</span><span class="nam">extractall</span><span class="op">(</span><span class="nam">path</span><span class="op">=</span><span class="nam">tmp_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t89" class="stm mis">                <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">'Archive extraction completed at:'</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t90" class="stm mis">                <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">format_dir_input</span><span class="op">(</span><span class="nam">tmp_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t90" class="stm mis">                <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_format_dir_input</span><span class="op">(</span><span class="nam">tmp_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t91" class="stm run hide_run">            <span class="key">elif</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cmp_type</span> <span class="op">==</span> <span class="str">'name'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t92" class="stm run hide_run">                <span class="key">for</span> <span class="nam">tarinfo</span> <span class="key">in</span> <span class="nam">tar</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t93" class="stm run hide_run">                    <span class="key">if</span> <span class="nam">tarinfo</span><span class="op">.</span><span class="nam">isreg</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -432,7 +430,7 @@
 <p id="t102" class="stm run hide_run">        <span class="nam">path_list</span><span class="op">=</span><span class="op">[</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t103" class="stm run hide_run">        <span class="nam">list_for_prefix</span><span class="op">=</span><span class="op">[</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t104" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t105" class="stm run hide_run">        <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">'Processing directory:'</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t105" class="stm run hide_run">        <span class="nam">print</span><span class="op">(</span><span class="str">'Processing directory:'</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t106" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t107" class="stm run hide_run">        <span class="key">for</span> <span class="nam">dirpath</span><span class="op">,</span><span class="nam">_</span><span class="op">,</span><span class="nam">files</span> <span class="key">in</span> <span class="nam">os</span><span class="op">.</span><span class="nam">walk</span><span class="op">(</span><span class="nam">file_path</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t108" class="stm run hide_run">            <span class="key">for</span> <span class="nam">filename</span> <span class="key">in</span> <span class="nam">files</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -448,7 +446,7 @@
 <p id="t118" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t119" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t120" class="stm run hide_run">    <span class="key">def</span> <span class="nam">_format_file_input</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t121" class="stm run hide_run">        <span class="nam">log</span><span class="op">.</span><span class="nam">info</span><span class="op">(</span><span class="op">(</span><span class="str">'Processing file:'</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t121" class="stm run hide_run">        <span class="nam">print</span><span class="op">(</span><span class="str">'Processing file:'</span><span class="op">,</span><span class="nam">file_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t122" class="stm run hide_run">        <span class="nam">name</span><span class="op">,</span><span class="nam">ext</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">_get_file_metadata</span><span class="op">(</span><span class="nam">file_path</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t123" class="stm run hide_run">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_process_list_to_dict</span><span class="op">(</span><span class="op">[</span><span class="op">[</span><span class="nam">file_path</span><span class="op">,</span><span class="nam">name</span><span class="op">,</span><span class="nam">ext</span><span class="op">]</span><span class="op">]</span><span class="op">,</span><span class="str">''</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t124" class="pln"><span class="strut">&nbsp;</span></p>
@@ -511,14 +509,14 @@
 <p id="t181" class="stm run hide_run">        <span class="key">return</span> <span class="nam">results_dict</span><span class="strut">&nbsp;</span></p>
 <p id="t182" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t183" class="stm run hide_run">    <span class="key">def</span> <span class="nam">_do_checksum_comaprison</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span><span class="nam">prog</span><span class="op">,</span><span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t184" class="stm mis">        <span class="nam">cmd</span><span class="op">=</span><span class="str">r'{chksum} {filea} {fileb}'</span><span class="strut">&nbsp;</span></p>
-<p id="t185" class="stm mis">        <span class="nam">kwargs</span><span class="op">[</span><span class="str">'chksum'</span><span class="op">]</span><span class="op">=</span><span class="nam">prog</span><span class="strut">&nbsp;</span></p>
+<p id="t184" class="stm mis">        <span class="nam">cmd</span><span class="op">=</span><span class="str">r'{checksum} {filea} {fileb}'</span><span class="strut">&nbsp;</span></p>
+<p id="t185" class="stm mis">        <span class="nam">kwargs</span><span class="op">[</span><span class="str">'checksum'</span><span class="op">]</span><span class="op">=</span><span class="nam">prog</span><span class="strut">&nbsp;</span></p>
 <p id="t186" class="stm mis">        <span class="op">(</span><span class="nam">stdout</span><span class="op">,</span><span class="nam">stderr</span><span class="op">)</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">_run_command</span><span class="op">(</span><span class="nam">cmd</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span><span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t187" class="stm mis">        <span class="nam">out_msg</span><span class="op">=</span><span class="nam">re</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">'\n|\s'</span><span class="op">,</span><span class="nam">stdout</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t188" class="stm mis">        <span class="key">if</span> <span class="nam">stderr</span> <span class="op">!=</span> <span class="key">None</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t189" class="stm mis">            <span class="key">return</span><span class="strut">&nbsp;</span></p>
 <p id="t190" class="stm mis">        <span class="key">elif</span> <span class="nam">out_msg</span><span class="op">[</span><span class="num">0</span><span class="op">]</span> <span class="op">==</span> <span class="nam">out_msg</span><span class="op">[</span><span class="num">3</span><span class="op">]</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t191" class="stm mis">            <span class="key">return</span> <span class="str">'chksum'</span><span class="strut">&nbsp;</span></p>
+<p id="t191" class="stm mis">            <span class="key">return</span> <span class="str">'checksum'</span><span class="strut">&nbsp;</span></p>
 <p id="t192" class="pln">        <span class="key">else</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t193" class="stm mis">            <span class="key">return</span><span class="strut">&nbsp;</span></p>
 <p id="t194" class="pln"><span class="strut">&nbsp;</span></p>
@@ -580,12 +578,10 @@
 <p id="t250" class="stm mis">            <span class="key">if</span> <span class="nam">value</span><span class="op">[</span><span class="num">1</span><span class="op">]</span> <span class="op">==</span> <span class="key">None</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t251" class="stm mis">                            <span class="nam">value</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="op">=</span><span class="str">'differ'</span><span class="strut">&nbsp;</span></p>
 <p id="t252" class="stm mis">            <span class="nam">print</span><span class="op">(</span><span class="nam">key</span><span class="op">,</span><span class="str">'\t'</span><span class="op">,</span><span class="str">'\t'</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">value</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t253" class="stm run hide_run"><span class="key">def</span> <span class="nam">main</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t254" class="stm mis">     <span class="nam">print</span><span class="op">(</span><span class="str">"Running module as main not allowed"</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t255" class="stm run hide_run"><span class="key">if</span> <span class="nam">__name__</span> <span class="op">==</span> <span class="str">'__main__'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t256" class="stm mis">  <span class="nam">main</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t257" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t258" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t253" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t254" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t255" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t256" class="pln"><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -596,7 +592,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.4.1</a>,
-            created at 2017-10-11 16:35
+            created at 2017-10-13 14:08
         </p>
     </div>
 </div>

@@ -23,7 +23,7 @@ def main():
     optParser.add_argument( "-c", "--cmp_type", type=str, dest="cmp_type", required=False, \
     default = None, help = "Compariosn type to perform [ \
      name: compares archives using file names, \
-     checksum: perform comparsion based on ckecsum tool defined in json config file \
+     checksum: perform comparsion based on checksum tool defined in json config file \
      data: does full data comparison based on tools defined for each extension type \
      Note- command line option if set overrides default value in json config file" )
     
