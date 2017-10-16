@@ -35,17 +35,17 @@ class ArchCompare(AbstractCompare):
     def _input_checker(self,infile):
         try:
             if tarfile.is_tarfile(infile):
-                log.info(("input is an archive:",infile))
+                print("input is an archive:",infile)
                 return 'tar'
             else:
-                log.info(("input is a file:",infile))
+                print("input is a file:",infile)
                 return 'file'
         except IsADirectoryError:
-            log.info(("input is directory:",infile))
+            print("input is directory:",infile)
             return 'dir'
         except IOError as ioe: 
-            log.debug(('Error in reading input file: ',ioe.args))
-            sys.exit(ioe)
+            print('Error in reading input file: ',ioe.args)
+            sys.exit(1)
         else:
             print("Unknown file type")
             return None
@@ -60,10 +60,10 @@ class ArchCompare(AbstractCompare):
                     self.cmp_type=''.join(key for key,val in self.cfg['cmp_type'].items() if val.upper() == 'Y')
                     log.info('Using comaprison type from json config')
         except json.JSONDecodeError as jde:
-            log.debug(('json error',jde.args[0]))
+            print(('json error',jde.args[0]))
             sys.exit(1)
         except FileNotFoundError as fne:
-            log.debug(('Can not find json file',fne.args))
+            print('Can not find json file',fne.args)
             sys.exit(1)
             
     def _format_input(self,ftype,file_path):
@@ -87,7 +87,7 @@ class ArchCompare(AbstractCompare):
                 tmp_path= tempfile.mkdtemp(dir=".")
                 tar.extractall(path=tmp_path)
                 log.info(('Archive extraction completed at:',file_path))
-                return self.format_dir_input(tmp_path)
+                return self._format_dir_input(tmp_path)
             elif self.cmp_type == 'name':
                 for tarinfo in tar:           
                     if tarinfo.isreg():        
@@ -102,7 +102,7 @@ class ArchCompare(AbstractCompare):
         path_list=[]
         list_for_prefix=[]
         
-        log.info(('Processing directory:',file_path))
+        print('Processing directory:',file_path)
         
         for dirpath,_,files in os.walk(file_path):
             for filename in files:
@@ -118,7 +118,7 @@ class ArchCompare(AbstractCompare):
 
      
     def _format_file_input(self,file_path):
-        log.info(('Processing file:',file_path))
+        print('Processing file:',file_path)
         name,ext=self._get_file_metadata(file_path)
         return self._process_list_to_dict([[file_path,name,ext]],'')
       
@@ -181,14 +181,14 @@ class ArchCompare(AbstractCompare):
         return results_dict   
       
     def _do_checksum_comaprison(self,prog,**kwargs):
-        cmd=r'{chksum} {filea} {fileb}'
-        kwargs['chksum']=prog
+        cmd=r'{checksum} {filea} {fileb}'
+        kwargs['checksum']=prog
         (stdout,stderr)=self._run_command(cmd.format(**kwargs)) 
         out_msg=re.split('\n|\s',stdout)
         if stderr != None:
             return
         elif out_msg[0] == out_msg[3]:
-            return 'chksum'
+            return 'checksum'
         else:
             return
 
@@ -242,17 +242,18 @@ class ArchCompare(AbstractCompare):
         dicta=self._format_input(typea,self.file_a)
         dictb=self._format_input(typeb, self.file_b)
         results=self._get_sets_to_compare(dicta,dictb)
-        self._format_results(results)
+        self._format_results(results,dicta,dictb)
     
-    def _format_results(self,results):
-        print('FileKey\tStatus\tResults')
-        for key,value in results.items():
-            if value[1] == None:
-        		    value[1]='differ'
-            print(key,'\t','\t'.join(value))  
-def main():
-     print("Running module as main not allowed")
-if __name__ == '__main__':
-  main()
+    def _format_results(self,results,dicta,dictb):
+        with open('results.tsv','w') as f:
+           print('FileKey\tStatus\tResults')
+           f.write('Filea\tFileb\tStatus\tResults\n')
+           for key,value in results.items():
+               if value[1] == None:
+        		      value[1]='differ'
+               print(key,'\t','\t'.join(value))
+               f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key,['NA'])[0],dictb.get(key,['NA'])[0],value[0],value[1]) )
+
+
 
 
