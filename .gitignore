@@ -10,3 +10,4 @@ cover/
 /archCompare.egg-info
 *.log
 results.tsv
+/.cache
