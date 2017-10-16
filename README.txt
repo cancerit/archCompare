@@ -24,11 +24,12 @@ Valid input types include:
 * folder - any folder containing sub folders and files
 * file - any file with extension configured in the `fileTypes.json` configuration file
 
-The output is a tab separated columns:
+The output is a tab separated results.tsv file containing:
 
-* `FileKey`  - compared file name abbreviated to represents uniqueness in both archives
-* `Status`   - comparsion status [ compared,skipped ]
-* `Results`  -  files are different or similar after comparison by [name , data , checksum]
+* `File_a`  - compared file name  from first archive
+* `File_b`  - compared file name  from second archive 
+* `Status`  - comparsion status [ compared,skipped ]
+* `Results` - files are different or similar after comparison by [name , data , checksum]
                 reson for skipping files
 
 Various exceptions can occur for malformed files.
