@@ -59,7 +59,8 @@ def _run_command(cmd):
 	""" runs command in a shell, returns stdout and exit code"""
 	args = shlex.split(cmd)
 	try:
-		cmd_obj = Popen(args, stdin=None, stdout=PIPE, stderr=STDOUT, shell=False, universal_newlines=True, bufsize=1)
+		cmd_obj = Popen(args, stdin=None, stdout=PIPE, stderr=STDOUT,
+										shell=False, universal_newlines=True, bufsize=1)
 		(stdout, stderr) = cmd_obj.communicate()
 		return stdout, cmd_obj.returncode
 	except OSError as oe:
@@ -78,7 +79,8 @@ def _format_results(results, dicta, dictb):
 			if value[1] is None:
 				value[1] = 'differ'
 			print(key, '\t', '\t'.join(value))
-			f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key, ['NA'])[0], dictb.get(key, ['NA'])[0], value[0], value[1]))
+			f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key, ['NA'])[0],
+																				dictb.get(key, ['NA'])[0], value[0], value[1]))
 
 
 def _do_checksum_comaprison(prog, **kwargs):
@@ -148,7 +150,8 @@ class ArchCompare(AbstractCompare):
 				self.cfg = json.load(cfgfile)
 				self.prefix_ext = self.cfg['other_prm']['prefix_extension']
 				if self.cmp_type is None:
-					self.cmp_type = ''.join(key for key, val in self.cfg['cmp_type'].items() if val.upper() == 'Y')
+					self.cmp_type = ''.join(key for key, val in self.cfg['cmp_type'].items()
+																	if val.upper() == 'Y')
 					log.info('Using comaparison type from json config')
 		except json.JSONDecodeError as jde:
 			print('json error', jde.args[0])

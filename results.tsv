@@ -1,6 +1,0 @@
-Filea	Fileb	Status	Results
-tests/data/testA/samplea.bam.bai	tests/data/testB/samplea.bam.bai	skipped	NoExtInJson
-tests/data/testA/samplea.bam	tests/data/testB/samplea.bam	compared	data
-tests/data/testA/vcf_data/samplea.caveman_c.annot.vcf.gz	tests/data/testB/vcf_data/samplea.caveman_c.annot.vcf.gz	compared	differ
-tests/data/testA/onlyinA.txt	NA	skipped	onlyInA
-NA	tests/data/testB/onlyinB.txt	skipped	onlyInB
