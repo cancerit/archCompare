@@ -10,12 +10,14 @@ config = {
     'download_url': 'Whereto download it.',
     'author_email': 'cgphelp@sanger.ac.uk',
     'version': '1.0.0',
-    'python_requires': '>= 3.3',
-    'setup_requires': ['pytest'],
-    'install_requires': ['tarfile','logging','tempfile','json'],
+    'python_requires': '>= 3.3',	
+    'setup_requires': ['pytest','pytest-cov'],
+    'install_requires': ['logging'],
     'packages': ['archCompare'],
     'package_data': {'archCompare': ['config/*.json','config/*.conf']},
-    'scripts': ['bin/compare.py'],
+    'entry_points': {
+        'console_scripts': ['cgpCompare=archCompare.compare_command:main'],
+    }
 }
 
 setup(**config)
