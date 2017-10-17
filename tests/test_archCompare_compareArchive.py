@@ -105,16 +105,19 @@ class TestClass():
     def test_get_sets(self):
         my_tar_file=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_filea,json_config=self.t_json,cmp_type='name')
         assert self.name_cmp_dict == my_tar_file._get_sets_to_compare(self.format_dir_dictA,self.format_dir_dictB),'test_get_sets OK'
-        
-    #def test_do_comparison(self):
-    #    self.maxDiff = None
-    #    my_tar_tar_cmp=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_tarb,json_config=self.t_json,cmp_type='data')
-    #    assert self.data_cmp_dict == my_tar_tar_cmp._do_comparison(self.format_dir_dictA,self.format_dir_dictB,self.common_files),'test_do_comparison OK'
     
-    #def test_bamdiff(self):
-    #    self.maxDiff = None
-    #    my_dir_dir_bam=fc.ArchCompare(archive_a=self.t_dirbamA,archive_b=self.t_dirbamB,json_config=self.t_json,cmp_type='data')
-    #    assert self.bamdiff_result == my_dir_dir_bam._do_comparison(self.format_dir_bamdiffA,self.format_dir_bamdiffB,self.common_files_bamdiff),'test_do_BamComparison OK'
+    @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")    
+    def test_do_comparison(self):
+        self.maxDiff = None
+        my_tar_tar_cmp=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_tarb,json_config=self.t_json,cmp_type='data')
+        assert self.data_cmp_dict == my_tar_tar_cmp._do_comparison(self.format_dir_dictA,self.format_dir_dictB,self.common_files),'test_do_comparison OK'
+    
+    @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")    
+    def test_bamdiff(self):
+        self.maxDiff = None
+        my_dir_dir_bam=fc.ArchCompare(archive_a=self.t_dirbamA,archive_b=self.t_dirbamB,json_config=self.t_json,cmp_type='data')
+        assert self.bamdiff_result == my_dir_dir_bam._do_comparison(self.format_dir_bamdiffA,self.format_dir_bamdiffB,self.common_files_bamdiff),'test_do_BamComparison OK'
+    
     def test_checksum(self):
         self.maxDiff = None
         my_dir_dir_checksum=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_folderb,json_config=self.t_json,cmp_type='checksum')
