@@ -8,5 +8,6 @@
   "archCompare/archCompartest.py::TestClass::()::test_format_file_input": true,
   "archCompare/archCompartest.py::TestClass::()::test_format_tar_input": true,
   "archCompare/archCompartest.py::TestClass::()::test_get_file_metadata": true,
-  "archCompare/archCompartest.py::TestClass::()::test_get_sets": true
+  "archCompare/archCompartest.py::TestClass::()::test_get_sets": true,
+  "tests/test_archCompare_compareArchive.py::TestClass::()::test_bamdiff": true
 }
