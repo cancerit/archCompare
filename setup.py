@@ -9,7 +9,7 @@ config = {
     'url': 'https://github.com/CancerIT/archCompare',
     'download_url': 'Whereto download it.',
     'author_email': 'cgphelp@sanger.ac.uk',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'python_requires': '>= 3.3',	
     'setup_requires': ['pytest','pytest-cov'],
     'install_requires': ['logging'],
