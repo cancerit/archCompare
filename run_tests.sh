@@ -16,4 +16,4 @@ $MYPACKAGE
 set +e
 radon cc \
  -nc \
-$MYPACKAGE bin
+$MYPACKAGE
