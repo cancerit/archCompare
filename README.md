@@ -12,10 +12,10 @@ the driver code.
 
 `compare.py` has multiple sub commands, listed with `compare.py --help`.
 
-### compare.py
+### cgpCompare
 
-Takes the input archives/files/folders and does the comparison for matching file types
-based on tools managed by the `archCompare/config/*.json`
+Takes the input archives,files,folders and does the comparison for matching file types
+based on tools defined in  `archCompare/config/*.json`
 file. 
 
 Valid input types include:
@@ -103,5 +103,5 @@ $ python setup.py bdist_wheel -d dist
 # this creates an wheel archive which can be copied to a deployment location, e.g.
 $ scp archCompare.egg-py3-none-any.whl user@host:~/wheels
 # on host
-$ pip install --find-links=~/wheels cgp_seq_input_val
+$ pip install --find-links=~/wheels archCompare 
 ```

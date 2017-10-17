@@ -10,5 +10,7 @@ cover/
 /dist
 /archCompare.egg-info
 *.log
-results.tsv
-/.cache
+/results.tsv
+/.cache*
+/distribute*
+/.idea
