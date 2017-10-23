@@ -40,14 +40,14 @@ Installation is via `easy_install`.  Simply execute with the path to the compile
 'egg':
 
 ```bash
-easy_install archCompare.egg-X.X.X-py3.6.egg
+easy_install archCompare.egg-0.1.0-py3.6.egg
 
 ```
 
 Installing via `pip install` .Simply execute with the path to the compiled 'whl':
 ```bash
 
-pip install archCompare.X.X.X-py3-none-any.whl
+pip install archCompare.1.0.2-py3-none-any.whl
 
 ```
 
@@ -110,7 +110,7 @@ The release is handled by wheel:
 $ source env/bin/activate # if not already
 $ python setup.py bdist_wheel -d dist
 # this creates an wheel archive which can be copied to a deployment location, e.g.
-$ scp archCompare.X.X.X-py3-none-any.whl user@host:~/wheels
+$ scp archCompare.1.0.2-py3-none-any.whl user@host:~/wheels
 # on host
 $ pip install --find-links=~/wheels archCompare
 ```
