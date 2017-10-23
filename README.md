@@ -1,6 +1,6 @@
 # archComapre
 This tool compares a pair of data structures [ files, directoris and archives ]
-Provides concise information about the archive content similarity and differences if any.
+Provides concise information about the archive content using tolls defoned in the config file.
 
 ## Design
 
@@ -10,13 +10,13 @@ the driver code.
 
 ## Tools
 
-`compare.py` has multiple sub commands, listed with `compare.py --help`.
+`cgpCompare` has multiple commands, listed with `cgpCompare --help`.
 
 ### cgpCompare
 
 Takes the input archives,files,folders and does the comparison for matching file types
 based on tools defined in  `archCompare/config/*.json`
-file. 
+file.
 
 Valid input types include:
 
@@ -24,13 +24,13 @@ Valid input types include:
 * folder - any folder containing sub folders and files
 * file - any file with extension configured in the `fileTypes.json` configuration file
 
-The output is a tab separated results.tsv file containing:
+The output is a tab separated columns containing:
 
 * `File_a`  - compared file name  from first archive
-* `File_b`  - compared file name  from second archive 
-* `Status`  - comparsion status [ compared,skipped ]
-* `Results` - files are different or similar after comparison by [name , data , checksum]
-                reson for skipping files
+* `File_b`  - compared file name  from second archive
+* `Status`  - comparsion status [ compared, skipped ]
+* `SimilarityBy` - files are different or similar after comparison by [name , data , checksum]
+              reason if any for skipping file comparison
 
 Various exceptions can occur for malformed files.
 
@@ -40,8 +40,17 @@ Installation is via `easy_install`.  Simply execute with the path to the compile
 'egg':
 
 ```bash
-easy_install bundles/archCompare.egg-0.1.0-py3.6.egg
+easy_install archCompare.egg-0.1.0-py3.6.egg
+
 ```
+
+Installing via `pip install` .Simply execute with the path to the compiles `whl`:
+```bash
+
+pip install archCompare.1.0.2-py3-none-any.whl
+
+```
+
 
 ### Package Dependancies
 
@@ -101,7 +110,7 @@ The release is handled by wheel:
 $ source env/bin/activate # if not already
 $ python setup.py bdist_wheel -d dist
 # this creates an wheel archive which can be copied to a deployment location, e.g.
-$ scp archCompare.egg-py3-none-any.whl user@host:~/wheels
+$ scp archCompare.1.0.2-py3-none-any.whl user@host:~/wheels
 # on host
-$ pip install --find-links=~/wheels archCompare 
+$ pip install --find-links=~/wheels archCompare
 ```
