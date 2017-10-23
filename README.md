@@ -44,7 +44,7 @@ easy_install archCompare.egg-0.1.0-py3.6.egg
 
 ```
 
-Installing via `pip install` .Simply execute with the path to the compiles `whl`:
+Installing via `pip install` .Simply execute with the path to the compiled 'whl':
 ```bash
 
 pip install archCompare.1.0.2-py3-none-any.whl
