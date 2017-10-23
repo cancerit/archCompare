@@ -14,3 +14,4 @@ cover/
 /.cache*
 /distribute*
 /.idea
+/tmp*
