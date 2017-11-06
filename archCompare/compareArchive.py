@@ -54,6 +54,7 @@ class ArchCompare(AbstractCompare):
             with open(self.json_file, 'r') as cfgfile:
                 self.cfg = json.load(cfgfile)
                 self.prefix_ext = self.cfg['other_prm']['prefix_extension']
+                self.extend_ext = self.cfg['other_prm']['extend_extension']
                 if self.cmp_type is None:
                     self.cmp_type = ''.join(key for key, val in self.cfg['cmp_type'].items()
                                             if val.upper() == 'Y')
@@ -138,7 +139,7 @@ class ArchCompare(AbstractCompare):
         (name_no_ext, first_ext) = os.path.splitext(name)
         if first_ext == '.gz':
             (_, second_ext) = os.path.splitext(name_no_ext)
-            if second_ext in self.prefix_ext:
+            if second_ext in self.extend_ext:
                 first_ext = second_ext + first_ext
         return name, first_ext
 
@@ -152,11 +153,7 @@ class ArchCompare(AbstractCompare):
         common_files = list(set(dictA.keys()) & set(dictB.keys()))
         only_in_archiveA = list(set(dictA.keys()) - set(dictB.keys()))
         only_in_archiveB = list(set(dictB.keys()) - set(dictA.keys()))
-        if self.cmp_type == 'name':
-            for file_key in common_files:
-                results_dict[file_key] = ['compared', 'name']
-        else:
-            results_dict = self._do_comparison(dictA, dictB, common_files)
+        results_dict = self._do_comparison(dictA, dictB, common_files)
         for file_key in only_in_archiveA:
             results_dict[file_key] = ['skipped', 'onlyInA']
         for file_key in only_in_archiveB:
@@ -181,6 +178,8 @@ class ArchCompare(AbstractCompare):
             elif filea == fileb:
                 log.info("Files have identical paths, skipping comaprison filea:{}fileb:{}".format(filea, fileb))
                 results_dict[file_key] = ['skipped', 'IdenticalPath']
+            elif self.cmp_type == 'name':
+                results_dict[file_key] = ['compared', 'name']
             elif self.cmp_type == 'checksum':
                 log.info("performig checksum")
                 result = sm.do_checksum_comaprison(checksum_type, filea=filea, fileb=fileb)

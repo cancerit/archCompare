@@ -7,7 +7,6 @@ config = {
     'description': 'tool to comapre files and/or archives',
     'author': 'Shriram G Bhosle',
     'url': 'https://github.com/CancerIT/archCompare',
-    'download_url': 'Whereto download it.',
     'author_email': 'cgphelp@sanger.ac.uk',
     'version': '1.1.0',
     'python_requires': '>= 3.3',	

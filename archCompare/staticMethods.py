@@ -68,12 +68,12 @@ class StaticMthods(object):
             f = open('results.tsv', 'w')
             f.write('Filea\tFileb\tStatus\tSimilarityBy\n')
 
-        print('Filea\tFileb\tStatus\tSimilarityBy\n')
+        print('Filea\tFileb\tStatus\tSimilarityBy')
         for key, value in results.items():
             if value[1] is None:
                 value[1] = 'differ'
             if outfile is None:
-                print("{}\t{}\t{}\t{}\n".format(dicta.get(key, ['NA'])[0],
+                print("{}\t{}\t{}\t{}".format(dicta.get(key, ['NA'])[0],
                                                 dictb.get(key, ['NA'])[0], value[0], value[1]))
             else:
                 f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key, ['NA'])[0],
