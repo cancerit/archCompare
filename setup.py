@@ -3,12 +3,12 @@
 from setuptools import setup
 
 config = {
+    'version': '1.1.1',
     'name': 'archCompare',
     'description': 'tool to comapre files and/or archives',
     'author': 'Shriram G Bhosle',
     'url': 'https://github.com/CancerIT/archCompare',
     'author_email': 'cgphelp@sanger.ac.uk',
-    'version': '1.1.0',
     'python_requires': '>= 3.3',	
     'setup_requires': ['pytest','pytest-cov','beautifultable'],
     'install_requires': ['logging'],
