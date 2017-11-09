@@ -1,8 +1,6 @@
-branches:
-  only: 
-    - master
 notifications:
-  email: sb43@sanger.ac.uk
+  email: false
+  slack: wtsi-cgpit:ptUMR1tkNyZJYd9TpGoss8WR
 
 env:
   global:
