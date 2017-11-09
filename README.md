@@ -29,8 +29,8 @@ The output is a tab separated columns containing:
 * `File_a`  - compared file name  from first archive
 * `File_b`  - compared file name  from second archive
 * `Status`  - comparsion status [ compared, skipped ]
-* `SimilarityBy` - files are different or similar after comparison by [name , data , checksum]
-              reason if any for skipping file comparison
+* `SimilarityBy` - if files are compared and found similar it will have one of the value [name , data or checksum] 
+              otherwise 'differ', reason if files were skipped from comparison
 
 Various exceptions can occur for malformed files.
 
