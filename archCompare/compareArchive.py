@@ -126,7 +126,7 @@ class ArchCompare(AbstractCompare):
         """
           creates a diretory object of key = file name and values = [file paths, name, extensions]
         """
-        log.info('Processing file:{}'.format(file_path))
+        log.info('Processing file :{}'.format(file_path))
         name, ext = self._get_file_metadata(file_path)
         return sm.process_list_to_dict([[file_path, name, ext]], '')
 
@@ -193,7 +193,7 @@ class ArchCompare(AbstractCompare):
         return results_dict
 
     def _run_diff(self, ext_dict, ext, **kwargs):
-        """ run comparison for given set of extension , additional methods could be added for different extension
+        """ run comparison for given set of extension , additional methods could be added for different extension types
           returns data [identical file content] or None [differences in file]
         """
         additional_prm = ext_dict.get('prm', None)

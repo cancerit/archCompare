@@ -5,6 +5,8 @@ from subprocess import Popen, PIPE, STDOUT
 import shlex
 import re
 import logging.config
+from beautifultable import BeautifulTable
+
 
 configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
 log_config = configdir + 'logging.conf'
@@ -50,34 +52,39 @@ class StaticMthods(object):
 
     def run_command(cmd):
         """ runs command in a shell, returns stdout and exit code"""
-        args = shlex.split(cmd)
         try:
-            cmd_obj = Popen(args, stdin=None, stdout=PIPE, stderr=STDOUT,
-                            shell=False, universal_newlines=True, bufsize=1)
+            cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=STDOUT,
+                            shell=True, universal_newlines=True, bufsize=-1, executable='/bin/bash')
+            log.info(("running command", cmd))
             (stdout, stderr) = cmd_obj.communicate()
             return stdout, cmd_obj.returncode
         except OSError as oe:
-            log.error(("Unable to run command", cmd, oe.args))
+            log.error(("Unable to run command", cmd, oe.args[0]))
             return 'Error', 'Error'
 
     def format_results(results, dicta, dictb, outfile):
         """
           formats output results as tab separated files
         """
+        table = BeautifulTable(max_width=120)
         if outfile is not None:
-            f = open('results.tsv', 'w')
+            f = open(outfile, 'w')
             f.write('Filea\tFileb\tStatus\tSimilarityBy\n')
-
-        print('Filea\tFileb\tStatus\tSimilarityBy')
+        else:
+            table.column_headers = ['Filea', 'Fileb', 'Status', 'SimilarityBy']
         for key, value in results.items():
             if value[1] is None:
                 value[1] = 'differ'
+            row_val = "{}\t{}\t{}\t{}".format(dicta.get(key, ['NA'])[0],
+                                            dictb.get(key, ['NA'])[0], value[0], value[1])
             if outfile is None:
-                print("{}\t{}\t{}\t{}".format(dicta.get(key, ['NA'])[0],
-                                                dictb.get(key, ['NA'])[0], value[0], value[1]))
+                table.append_row(row_val.split("\t"))
             else:
-                f.write("{}\t{}\t{}\t{}\n".format(dicta.get(key, ['NA'])[0],
-                                                  dictb.get(key, ['NA'])[0], value[0], value[1]))
+                f.write(row_val)
+        if outfile is None:
+            table.sort(2)
+            table.auto_calculate_width()
+            print(table)
 
     def do_checksum_comaprison(prog, **kwargs):
         """
@@ -107,7 +114,8 @@ class StaticMthods(object):
             try:
                 match = re.search(exp_out, line)
                 if match is None:  # if match not found return true
-                    return 'data'
+                    print("First non matching line found:\n", line)
+                    return
                 elif match[0] == '##contig=':  # matches only when contigs are different in two vcf files
                     return
             except re.error:

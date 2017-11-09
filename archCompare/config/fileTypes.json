@@ -13,22 +13,24 @@
         "_comment2":"and comma separated list of additional paramaters.",
         "_comment3":"Please note that order or prm list should match with command line placeholders ({})", 
         "_comment4":"first two placeholders are always for filea and fileb under comparison",
+        "_comment5":"exp_out is always compares with the stdout from commands",
         ".txt":{
-            "cmd":"zdiff --suppress-common-lines -y {filea} {fileb}"
+            "cmd":"diff --suppress-common-lines -y {filea} {fileb}",
+            "exp_out":["^##"] 
             }, 
         ".bed":{
-            "cmd":"zdiff --suppress-common-lines -y {filea} {fileb}",
+            "cmd":"diff --suppress-common-lines -y {filea} {fileb}",
             "_comment":"ignore differences in header",
             "exp_out":["^##"]            
             }, 
         ".vcf.gz":{
-                "cmd":"zdiff --suppress-common-lines -y {filea} {fileb}",
+                "cmd":"diff --suppress-common-lines -y  <( zcat {filea} | cut --complement -f 3  ) <( zcat {fileb} | cut --complement -f 3 )",
                 "_comment":"ignore differences in header except contig names",
-                "_comment":"put all exceptions at the start of exp_out with OR symbol",
+                "_comment":"put all exceptions at the start of exp_out with OR [|] symbol",
                 "exp_out":["^##contig=|^##"]  
             },
         ".vcf":{
-            "cmd":"zdiff --suppress-common-lines -y {filea} {fileb}",
+            "cmd":"diff --suppress-common-lines -y  <( zcat {filea} | cut --complement -f 3 ) <( zcat {fileb} | cut --complement -f 3 )",
             "_comment":"ignore differences in header except contig names",
             "_comment":"put all exceptions at the start of exp_out with OR symbol",
             "exp_out":["^##contig=|^##"]
