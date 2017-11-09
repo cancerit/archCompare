@@ -46,7 +46,9 @@
     "other_prm":
     {
         "_comment1":"file extension used to get common prefix value which can be ignored when comparing file names in two archives",
-        "prefix_extension":[".vcf.gz",".bam",".vcf",".bai"],
+        "prefix_extension":["NOT_DEFINED"],
+        "_comment2":"file extension to considered to extended file extenion to make it unique e.g., .gz to .vcf.gz",
+        "extend_extension":[".vcf"],
         "_comment2":"do checksum using following programm",
         "checksum_type":"sha1sum"
     }
