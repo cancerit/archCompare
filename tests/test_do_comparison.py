@@ -70,43 +70,6 @@ class TestClass():
     data_cmp_dict={'bam': ['compared', 'data'], 'bam.bai': ['skipped', 'NoExtInJson'], 'caveman_c.annot.vcf.gz': ['compared', None]}
     checksum_cmp_dict={'bam': ['compared', 'checksum'], 'bam.bai': ['skipped', 'NoExtInJson'], 'caveman_c.annot.vcf.gz': ['compared', None]}
 
-    def test_dir_file_type(self):
-        # check input type function
-        my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert my_dir_file.check_input() == ('dir','file') , 'Directory n file test OK'
-        my_dir_tar=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_tara,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert ('dir','tar')== my_dir_tar.check_input(),'directory n tar test OK'
-        my_tar_tar=fc.ArchCompare(archive_a=self.t_tarb,archive_b=self.t_tara,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert ('tar','tar') == my_tar_tar.check_input(),'tar n tar test OK'
-        my_dir_dir=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_folderb,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert ('dir','dir')== my_dir_dir.check_input(),'directory n directory test OK'
-        my_file_file=fc.ArchCompare(archive_a=self.t_filea,archive_b=self.t_fileb,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert ('file','file') == my_file_file.check_input(),'file n file test OK'
-
-    def test_get_file_metadata(self):
-        # test if file paths sub
-        my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert ('samplea.caveman_c.annot.vcf.gz','.vcf.gz') == my_dir_file._get_file_metadata(self.t_filea),'file metadata test ok'
-
-    def test_format_file_input(self):
-        my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert self.file_dict == my_dir_file._format_file_input(self.t_filea),'test_format_file_input OK'
-
-    def test_format_dir_input(self):
-        self.maxDiff = None
-        my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json,cmp_type=self.cmp_type)
-        assert self.format_dir_dictA == my_dir_file._format_dir_input(self.t_foldera),'test_format_dir_input OK'
-
-    def test_format_tar_input(self):
-        self.maxDiff = None
-        my_tar_tar=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_tarb,json_config=self.t_json,cmp_type='name')
-        assert self.format_tar_dictA == my_tar_tar._format_tar_input(self.t_tara),'test_format_tar_inputA OK'
-        assert self.format_tar_dictB == my_tar_tar._format_tar_input(self.t_tarb),'test_format_tar_inputB OK'
-
-    def test_get_sets(self):
-        my_tar_file=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_filea,json_config=self.t_json,cmp_type='name')
-        assert self.name_cmp_dict == my_tar_file._get_sets_to_compare(self.format_dir_dictA,self.format_dir_dictB),'test_get_sets OK'
-
     @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")
     def test_do_comparison(self):
         self.maxDiff = None
