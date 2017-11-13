@@ -69,9 +69,9 @@ class StaticMthods(object):
         table = BeautifulTable(max_width=120)
         if outfile is not None:
             f = open(outfile, 'w')
-            f.write('Filea\tFileb\tStatus\tSimilarityBy\n')
+            f.write('#Filea\tFileb\tStatus\tSimilarityBy\n')
         else:
-            table.column_headers = ['Filea', 'Fileb', 'Status', 'SimilarityBy']
+            table.column_headers = ['#Filea', 'Fileb', 'Status', 'SimilarityBy']
         for key, value in results.items():
             if value[1] is None:
                 value[1] = 'differ'
