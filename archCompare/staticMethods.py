@@ -113,10 +113,12 @@ class StaticMthods(object):
                 continue
             try:
                 match = re.search(exp_out, line)
-                if match is None:  # if match not found return true
+                if match:  # if match not found return true
+                     if match.group(0) == '##contig=':
+                         return
+                     #match[0] == '##contig=' # matches only when contigs are different in two vcf files
+                else:  
                     print("First non matching line found:\n", line)
-                    return
-                elif match[0] == '##contig=':  # matches only when contigs are different in two vcf files
                     return
             except re.error:
                 print('Error in regular expression:{}'.format(re.error))
