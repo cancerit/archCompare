@@ -1,7 +1,6 @@
 # archComapre
 This tool compares a pair of data structures [ files, directoris and archives ]
-Provides concise information about the archive content using tools def
-ioned in the config file.
+Provides concise information about the archive content using tools defined in the config file.
 
 ## Design
 
