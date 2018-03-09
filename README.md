@@ -59,7 +59,7 @@ Installing via `pip install` .Simply execute with the path to the compiled 'whl'
 pip install archCompare.X.X.X-py3-none-any.whl
 ```
 
-Release `.whl` files are generated as part of the release process and can be found on the [release page][archCompare-releases].
+Release `.whl` files are generated as part of the release process and can be found on the [release page][archCompare-releases] **(version >= 1.1.4)**.
 
 ### Package Dependencies
 
