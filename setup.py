@@ -11,7 +11,7 @@ config = {
     'author_email': 'cgphelp@sanger.ac.uk',
     'python_requires': '>= 3.3',	
     'setup_requires': ['pytest','pytest-cov'],
-    'install_requires': ['logging','beautifultable'],
+    'install_requires': ['beautifultable'],
     'packages': ['archCompare'],
     'package_data': {'archCompare': ['config/*.json','config/*.conf']},
     'entry_points': {
