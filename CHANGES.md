@@ -1,8 +1,9 @@
 # CHANGES
 
-## NEXT
+## 1.1.4
 
 * Remove `logging` from install_requires as it breaks python3 install
+* Change travis to use `pip install .` rather than installing dependencies
 
 ## 1.1.3
 
