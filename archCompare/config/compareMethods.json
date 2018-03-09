@@ -1,0 +1,46 @@
+{
+  "_#comment": [
+    "Only allow fields listed, not _comment1/2/3 use an array of '_#comment'",
+    "This file shouldn't be included in the package unless trimmed to only basic unix commands"
+  ],
+  "preprocessors": {
+    "vcf.gz": {
+      "_#comment": [
+        "Preprocess both filea and fileb, then run the rule for 'vcf' extension",
+        "Extension provided as key is replaced by extension in 'then' when naming 'tmp'",
+        "This is just an example of a pre-processor, if zdiff works use it"
+      ],
+      "preprocess": "zcat {file} > {tmp}",
+      "then": "vcf"
+    }
+  },
+  "rules": {
+    "txt": {
+      "_#comment": [
+        "Use of standard diff command, fail when non-zero exit code"
+      ],
+      "cmd": "diff -q {filea} {fileb}",
+      "check": "exit-code"
+    },
+    "vcf": {
+      "_#comment": [
+        "Use of standard diff command which is expected to have differences",
+        "that are not a problem and can be filtered to give a final line count",
+        "of '0'"
+      ],
+      "cmd": "diff -y --suppress-common-lines {filea} {fileb} | grep -cvE '^##'",
+      "check": "stdout",
+      "pass": "0"
+    },
+    "cram": {
+      "_#comment": [
+        "If any additional files are needed from outside the archive they should",
+        "be defined releative to execution or as absolute paths and explicitly set",
+        "in commands"
+      ],
+      "cmd": "diff_bams -a {filea} -b {fileb} -r /pathToNonArchFile/genome.fa",
+      "check": "stderr",
+      "bad_re": ["Reference sequence count is different", "Files differ at record"]
+    }
+  }
+}
