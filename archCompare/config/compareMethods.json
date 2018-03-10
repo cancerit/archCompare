@@ -24,7 +24,7 @@
     "vcf.gz": {
       "preprocess": "zcat {file} | cut -f 3 --complement > {tmp}",
       "then": "vcf"
-    }
+    },
     "vcf": {
       "preprocess": "cut -f 3 --complement {file} > {tmp}",
       "then": "vcf"
