@@ -3,18 +3,42 @@
     "Only allow fields listed, not _comment1/2/3 use an array of '_#comment'",
     "This file shouldn't be included in the package unless trimmed to only basic unix commands"
   ],
+  "globals": {
+    "_#comment": [
+      "exitOn determines which types of mismatch to exit on immediately, can be empty array",
+      "reportOn is the things to be in the final report"
+      "xxxxxOn values: file, size, diffs, md5, sha"
+      "If no diffs entry for a file extension compare based on: size, md5, sha1"
+    ],
+    "exitOn": ["diffs"],
+    "reportOn": ["file", "size"],
+    "default": "md5"
+  },
   "preprocessors": {
+    "_#comment": [
+      "Preprocess both filea and fileb, then run the diff defined by diffs.{then} extension",
+      "Extension provided as key is replaced by extension in 'then' when naming 'tmp'",
+      "This is just an example of a pre-processor, if zdiff works use it",
+      "then: always links to diffs section"
+    ],
     "vcf.gz": {
-      "_#comment": [
-        "Preprocess both filea and fileb, then run the rule for 'vcf' extension",
-        "Extension provided as key is replaced by extension in 'then' when naming 'tmp'",
-        "This is just an example of a pre-processor, if zdiff works use it"
-      ],
-      "preprocess": "zcat {file} > {tmp}",
+      "preprocess": "zcat {file} | cut -f 3 --complement > {tmp}",
+      "then": "vcf"
+    }
+    "vcf": {
+      "preprocess": "cut -f 3 --complement {file} > {tmp}",
       "then": "vcf"
     }
   },
-  "rules": {
+  "diffs": {
+    "_#comment": [
+      "cmd: command to execute, capture stdout, stderr and exitcode",
+      "check: which element of command you need to interrogate"
+      "pass: array of PASS exit-codes, absence defaults to [0] as expected response from a simple diff"
+      "good_re: array of regex to search for in {check} to indicate PASS",
+      "bad_re: array of regex to search for in {check} to indicate FAIL",
+      "  - pass & *_re are exclusive options"
+    ],
     "txt": {
       "_#comment": [
         "Use of standard diff command, fail when non-zero exit code"
@@ -30,7 +54,7 @@
       ],
       "cmd": "diff -y --suppress-common-lines {filea} {fileb} | grep -cvE '^##'",
       "check": "stdout",
-      "pass": "0"
+      "good_re": ["0"]
     },
     "cram": {
       "_#comment": [
