@@ -50,7 +50,7 @@ class StaticMthods(object):
             path_dict[meta_list[1].replace(prefix, '', 1)] = meta_list
         return path_dict
 
-    def run_command(cmd):
+    def run_command_old(cmd):
         """ runs command in a shell, returns stdout and exit code"""
         try:
             cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=STDOUT,
@@ -61,6 +61,23 @@ class StaticMthods(object):
         except OSError as oe:
             log.error(("Unable to run command", cmd, oe.args[0]))
             return 'Error', 'Error'
+        except subprocess.CalledProcessError as exc:
+            log.error(("Unable to run command", cmd, exe.args[0]))
+
+    def run_command(cmd):
+        """ runs command in a shell, returns stdout and exit code"""
+        if not len(cmd):
+            raise ValueError("Must supply at least one argument")
+        try:
+            #To capture standard error in the result, use stderr=subprocess.STDOUT:
+            cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=PIPE,
+                            shell=True, universal_newlines=True, bufsize=-1, close_fds=True, executable='/bin/bash')
+            log.info(("running command", cmd))
+            (out, error) = cmd_obj.communicate()
+            return out, error, cmd_obj.returncode
+        except OSError as oe:
+            log.error(("Unable to run command", cmd, oe.args[0]))
+            return 'Error', 'Error', 'Error'
 
     def format_results(results, dicta, dictb, outfile):
         """
@@ -93,14 +110,14 @@ class StaticMthods(object):
         """
         cmd = r'{checksum} {filea} {fileb}'
         kwargs['checksum'] = prog
-        (stdout, stderr) = StaticMthods.run_command(cmd.format(**kwargs))
-        out_msg = re.split('\n|\s', stdout)
-        if stdout == 'Error':
-            return 'Error'
-        elif out_msg[0] == out_msg[3]:
-            return 'checksum'
+        (out, error, exitcode) = StaticMthods.run_command(cmd.format(**kwargs))
+        out_msg = re.split('\n|\s', out)
+        if out == 'Error':
+            return out, error, exitcode
+        elif exitcode==0 and out_msg[0] == out_msg[3]:
+            return 'checksum', error, exitcode
         else:
-            return
+            return 'differ', error, exitcode
 
     def get_vcf_diff(stdout, exp_out):
         """
@@ -117,7 +134,7 @@ class StaticMthods(object):
                      if match.group(0) == '##contig=':
                          return
                      #match[0] == '##contig=' # matches only when contigs are different in two vcf files
-                else:  
+                else:
                     print("First non matching line found:\n", line)
                     return
             except re.error:

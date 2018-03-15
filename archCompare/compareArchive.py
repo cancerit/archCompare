@@ -53,14 +53,12 @@ class ArchCompare(AbstractCompare):
                 self.json_file = json_config
             with open(self.json_file, 'r') as cfgfile:
                 self.cfg = json.load(cfgfile)
-                self.prefix_ext = self.cfg['other_prm']['prefix_extension']
-                self.extend_ext = self.cfg['other_prm']['extend_extension']
+                self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
                 if self.cmp_type is None:
-                    self.cmp_type = ''.join(key for key, val in self.cfg['cmp_type'].items()
-                                            if val.upper() == 'Y')
-                    log.info('Using comaparison type from json config')
+                    self.cmp_type = self.cfg['globals']['default_comparison']
+                log.info('Performing comaparison type:{}'.format(self.cmp_type))
         except json.JSONDecodeError as jde:
-            sys.exit('json error'.foramt(jde.args[0]))
+            sys.exit('json error:{}'.format(jde.args[0]))
         except FileNotFoundError as fne:
             sys.exit('Can not find json file:{}'.format(fne.args[0]))
 
@@ -100,14 +98,15 @@ class ArchCompare(AbstractCompare):
                     if tarinfo.isreg():
                         name, ext = self._get_file_metadata(tarinfo.name)
                         path_list.append([tarinfo.name, name, ext])
-                        if ext in self.prefix_ext:
+                        if ext in self.ignore_prefix:
                             list_for_prefix.append(name)
                 prefix = os.path.commonprefix(list_for_prefix)
-                return sm.process_list_to_dict(path_list, prefix)
+                path_dict=sm.process_list_to_dict(path_list, prefix)
+                return path_dict
 
     def _format_dir_input(self, file_path):
         """
-          creates a diretory object of key = file name and values = [file paths, name, extensions]
+          creates a diretory object of key = file name and values = [file paths, name, extension]
         """
         path_list = []
         list_for_prefix = []
@@ -117,10 +116,11 @@ class ArchCompare(AbstractCompare):
                 fullpath = os.path.join(dirpath, filename)
                 name, ext = self._get_file_metadata(fullpath)
                 path_list.append([fullpath, name, ext])
-                if ext in self.prefix_ext:
+                if ext in self.ignore_prefix:
                     list_for_prefix.append(name)
         prefix = os.path.commonprefix(list_for_prefix)
-        return sm.process_list_to_dict(path_list, prefix)
+        path_dict=sm.process_list_to_dict(path_list, prefix)
+        return path_dict
 
     def _format_file_input(self, file_path):
         """
@@ -128,19 +128,18 @@ class ArchCompare(AbstractCompare):
         """
         log.info('Processing file :{}'.format(file_path))
         name, ext = self._get_file_metadata(file_path)
-        return sm.process_list_to_dict([[file_path, name, ext]], '')
+        path_dict=sm.process_list_to_dict([[file_path, name, ext]], '')
+        return path_dict
 
-    def _get_file_metadata(self, full_file_name):
+    def _get_file_metadata(self,full_file_name):
         """
           takes file path as input and gives its path and processed extension
-          # check second extension before .gz to determine file type [ e.g., .vcf.gz ]
+          #  If there are two extensions adds second extensions as prefix
         """
         (_, name) = os.path.split(full_file_name)
         (name_no_ext, first_ext) = os.path.splitext(name)
-        if first_ext == '.gz':
-            (_, second_ext) = os.path.splitext(name_no_ext)
-            if second_ext in self.extend_ext:
-                first_ext = second_ext + first_ext
+        (_, second_ext) = os.path.splitext(name_no_ext)
+        first_ext = second_ext + first_ext
         return name, first_ext
 
     def _get_sets_to_compare(self, dictA, dictB):
@@ -165,55 +164,112 @@ class ArchCompare(AbstractCompare):
           loops through dictionary and call explicit comaprsion methods as requested
           returns results dictionary containing filekey, comparison status and results if any
         """
+        print(common_files)
         results_dict = {}
-        json_data = self.cfg['extensions']
-        checksum_type = self.cfg['other_prm']['checksum_type']
+        preprocessors_dict = self.cfg['preprocessors']
+        json_data = self.cfg['diffs']
+        checksum_type = self.cfg['globals']['checksum_tool']
+        tmp_dir = tempfile.mkdtemp(dir=".")
         for file_key in common_files:
             filea, _, ext_filea = (dictA[file_key])
             fileb, _, _ = (dictB[file_key])
             ext_dict = json_data.get(ext_filea, None)
+            preprocess_dict=preprocessors_dict.get(ext_filea,None)
             # retrieve json command for given extension
-            if ext_dict is None:
-                results_dict[file_key] = ['skipped', 'NoExtInJson']
-            elif filea == fileb:
+            if filea == fileb:
                 log.info("Files have identical paths, skipping comaprison filea:{}fileb:{}".format(filea, fileb))
                 results_dict[file_key] = ['skipped', 'IdenticalPath']
             elif self.cmp_type == 'name':
                 results_dict[file_key] = ['compared', 'name']
             elif self.cmp_type == 'checksum':
                 log.info("performig checksum")
-                result = sm.do_checksum_comaprison(checksum_type, filea=filea, fileb=fileb)
-                results_dict[file_key] = ['compared', result]
+                (out,error,exitcode) = sm.do_checksum_comaprison(checksum_type, filea=filea, fileb=fileb)
+                if not error and exitcode==0:
+                    results_dict[file_key] = ['compared', out]
+                else:
+                    results_dict[file_key] = ['compared', "Exitcode:{}, Error:{}".format(exitcode,error)]
+            elif ext_dict is None and preprocess_dict is None:
+                results_dict[file_key] = ['skipped', 'NoExtInJson']
             elif self.cmp_type == 'data':
                 log.info("performig Data comparison")
-                result = self._run_diff(ext_dict, ext_filea, filea=filea, fileb=fileb)
-                results_dict[file_key] = ['compared', result]
+                # check if extension type needs preprocessing of files e.g., vcf.gz
+                if preprocess_dict is not None:
+                    preprocess_cmd=preprocess_dict.get('preprocess',None)
+                    filea=self._preprocess_file(preprocess_cmd,file=filea,
+                                        tmp=self._get_tmp_file(dir_name=tmp_dir))
+                    fileb=self._preprocess_file(preprocess_cmd,file=fileb,
+                                        tmp=self._get_tmp_file(dir_name=tmp_dir))
+                    # find out what to run next on these files....
+                    ext_filea=preprocess_dict.get('then')
+                    ext_dict = json_data.get(ext_filea, None)
+                    (out,error,exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
+                    results_dict[file_key] = ['compared', result]
+                else:
+                    (out,error,exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
+                    results_dict[file_key] = ['compared', result]
             else:
                 sys.exit('Unknown comparison type requested')
         return results_dict
 
-    def _run_diff(self, ext_dict, ext, **kwargs):
-        """ run comparison for given set of extension , additional methods could be added for different extension types
-          returns data [identical file content] or None [differences in file]
+    def _preprocess_file(self,cmd,**kwargs):
+        sm.run_command(cmd.format(**kwargs))
+        return kwargs.get('tmp')
+
+    def _get_tmp_file(self,dir_name="."):
+        return tempfile.NamedTemporaryFile(suffix='.txt',
+                               prefix='archComp',
+                               dir=tmp_dir,
+                               ).name
+
+    def _run_diff(self, ext_dict, **kwargs):
+        """ run comparison for given set of extension ,
+            additional methods could be added for different extension types
+            returns data [identical file content] or None [differences in file]
         """
-        additional_prm = ext_dict.get('prm', None)
+        err_msg='check_type not in Json config file'
+
         cmd = ext_dict.get('cmd')
-        exp_out = ext_dict.get('exp_out', None)
-        log.info(("requested comparison type:", self.cmp_type))
-        # add additional parametes
-        if additional_prm is not None:
-            for prm, val in additional_prm.items():
-                kwargs[prm] = val
-        (stdout, stderr) = sm.run_command(cmd.format(**kwargs))
-        if stdout == 'Error':
-            return 'Error'
-        log.info(('ARGS:', kwargs, 'ERR:', stderr, 'OUT:', stdout))
-        if re.search('^.vcf|^.vcf.gz', ext):
-            return sm.get_vcf_diff(stdout, exp_out[0])
+        check_type = ext_dict.get('check', None)
+        good_re = ext_dict.get('good_re', None)
+        bad_re = ext_dict.get('good_re', None)
+
+        (out,error,exitcode) = sm.run_command(cmd.format(**kwargs))
+        if check_type == 'stderr':
+
+        if good_re and check_type == 'stdout':
+                for pattern in good_re:
+
+        if check_type == 'exit-code':
+
         else:
-            if stderr:
-                return
-        return 'data'
+            return err_msg,err_msg,err_msg
+
+
+    def call_quiet(*args):
+        """Safely run a command and get stdout; print stderr if there's an error.
+        Like subprocess.check_output, but silent in the normal case where the
+        command logs unimportant stuff to stderr. If there is an error, then the
+        full error message(s) is shown in the exception message.
+        """
+        # args = map(str, args)
+        if not len(args):
+            raise ValueError("Must supply at least one argument (the command name)")
+        try:
+            proc = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+        except OSError as exc:
+            raise RuntimeError("Could not find the executable %r" % args[0]
+                               + " -- is it installed correctly?"
+                               + "\n(Original error: %s)" % exc)
+        out, err = proc.communicate()
+        if proc.returncode != 0:
+            raise RuntimeError("Subprocess command failed:\n$ %s\n\n%s"
+                               % (' '.join(args), err))
+        return out
+
+
+
+
 
     def run_comparison(self):
         """

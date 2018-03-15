@@ -31,8 +31,9 @@ def main():
                           default=None, help="Compariosn type to perform [ \
                            name: compares archives using file names, \
                            checksum: perform comparsion based on checksum tool defined in json config file \
-                           data: does full data comparison based on tools defined for each extension type \
-                           Note- command line option if set overrides default value in json config file ]")
+                           data: does full data comparison based on tools defined for each extension type in\
+                           .json file's diffs section \
+                           Note- command line option if set overrides default value set in json config file ]")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
     optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)
