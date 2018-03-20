@@ -7,7 +7,6 @@ import re
 import logging.config
 from beautifultable import BeautifulTable
 
-
 configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
 log_config = configdir + 'logging.conf'
 json_config = configdir + 'fileTypes.json'
@@ -55,7 +54,7 @@ class StaticMthods(object):
         if not len(cmd):
             raise ValueError("Must supply at least one argument")
         try:
-            #To capture standard error in the result, use stderr=subprocess.STDOUT:
+            # To capture standard error in the result, use stderr=subprocess.STDOUT:
             cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=PIPE,
                             shell=True, universal_newlines=True, bufsize=-1,
                             close_fds=True, executable='/bin/bash')
@@ -70,14 +69,14 @@ class StaticMthods(object):
         """
           formats output results as tab separated file and commandline output
         """
-        const_header=['#Filea', 'Fileb']
-        (columns,file_key)=([] for i in range(2))
+        const_header = ['#Filea', 'Fileb']
+        (columns, file_key) = ([] for i in range(2))
 
         for comp_n_file, result in results.items():
             columns.append(comp_n_file[0])
             file_key.append(comp_n_file[1])
 
-        comp_type=sorted(set(columns))
+        comp_type = sorted(set(columns))
         const_header.extend(comp_type)
         table = BeautifulTable(max_width=200)
         table.column_headers = const_header
@@ -85,18 +84,18 @@ class StaticMthods(object):
         if outfile:
             try:
                 f = open(outfile, 'w')
-                f.write('\t'.join(const_header)+'\n')
+                f.write('\t'.join(const_header) + '\n')
             except IOError as ioe:
-                    sys.exit('Can not create outfile:{}'.format(ioe.args[0]))
+                sys.exit('Can not create outfile:{}'.format(ioe.args[0]))
         for file_key_val in sorted(set(file_key)):
-            row_data=[]
-            row_data=[dicta.get(file_key_val,['NA'])[0], dictb.get(file_key_val,['NA'])[0]]
+            row_data = []
+            row_data = [dicta.get(file_key_val, ['NA'])[0], dictb.get(file_key_val, ['NA'])[0]]
             for cmp in comp_type:
-                res=results.get((cmp,file_key_val),'N')
+                res = results.get((cmp, file_key_val), 'N')
                 row_data.extend([res])
             table.append_row(row_data)
             if outfile:
-                f.write('\t'.join(row_data)+'\n')
+                f.write('\t'.join(row_data) + '\n')
         if outfile is None:
             table.sort(1)
             table.auto_calculate_width()

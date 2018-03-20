@@ -35,7 +35,8 @@ def main():
                            checksum: perform comparsion based on checksum tool defined in json config file \
                            diffs: does full data comparison based on tools defined for each extension type in\
                            json file's diffs section \
-                           Note- command line option if set overrides default reportsOn values in json config file ]")
+                           Note- command line option if set overrides default reportsOn \
+                           values in json config file ]")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
     optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)

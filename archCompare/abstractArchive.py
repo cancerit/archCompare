@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 import sys
 
+
 class AbstractCompare(ABC):
-    '''
+    """
       abstract class inilializes files to be comapred and implements two required methods
       to check user input and load config file
-    '''
-
+    """
     def __init__(self, **kwargs):
         self.file_a = kwargs['archive_a']
         self.file_b = kwargs['archive_b']
