@@ -28,17 +28,12 @@ class TestClass():
                                                 'samplea.caveman_c.annot.vcf.gz',
                                                 '.vcf.gz',2055]
                                                 }
-    format_dir_bamdiffA={'samplea.bam': [t_dirbamA+'/samplea.bam', 'samplea.bam', '.bam',73060]}
-    format_dir_bamdiffB={'samplea.bam': [t_dirbamB+'/samplea.bam', 'samplea.bam', '.bam',73060]}
-
-
     format_tar_dictA={
                       'samplea.bam': [cwdpath+'/testA/samplea.bam', 'samplea.bam', '.bam',73060],
                       'samplea.bam.bai': [cwdpath+'/testA/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
                       'onlyinA.txt': [cwdpath+'/testA/onlyinA.txt', 'onlyinA.txt', '.txt',0],
                       'samplea.caveman_c.annot.vcf.gz': [cwdpath+'/testA/vcf_data/samplea.caveman_c.annot.vcf.gz',
                        'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2060]}
-
 
     format_tar_dictB={
                       'samplea.bam': [cwdpath+'/testB/samplea.bam', 'samplea.bam', '.bam',73060],
@@ -47,15 +42,12 @@ class TestClass():
                       'samplea.bam.bai': [cwdpath+'/testB/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
                       'onlyinB.txt': [cwdpath+'/testB/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
 
-
-
     format_dir_dictA={
                       'samplea.bam': [t_foldera+'/samplea.bam', 'samplea.bam', '.bam',73060],
                       'samplea.bam.bai': [t_foldera+'/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
                       'onlyinA.txt': [t_foldera+'/onlyinA.txt', 'onlyinA.txt', '.txt',0],
                       'samplea.caveman_c.annot.vcf.gz': [t_foldera+'/vcf_data/samplea.caveman_c.annot.vcf.gz',
                        'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2060]}
-
 
     format_dir_dictB={
                       'samplea.bam': [t_folderb+'/samplea.bam', 'samplea.bam', '.bam',73060],
@@ -65,8 +57,6 @@ class TestClass():
                       'onlyinB.txt': [t_folderb+'/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
 
     common_inAB=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']
-    only_inA=['onlyinA.txt']
-    only_inB=['onlyinB.txt']
 
     def test_format_file_input(self):
         my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json,cmp_type=self.cmp_type)

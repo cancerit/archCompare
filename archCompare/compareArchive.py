@@ -12,7 +12,7 @@ from archCompare.staticMethods import StaticMthods as sm
 
 configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
 log_config = configdir + 'logging.conf'
-json_config = configdir + 'fileTypes.json'
+json_config = configdir + 'CompareMethods.json'
 logging.config.fileConfig(log_config)
 
 log = logging.getLogger('compareArchive')
@@ -251,7 +251,7 @@ class ArchCompare(AbstractCompare):
             log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
             return 'N'
 
-    def _preprocess_file(self, cmd, **kwargs):
+    def _preprocess_file(self,cmd, **kwargs):
         sm.run_command(cmd.format(**kwargs))
         return kwargs.get('tmp')
 

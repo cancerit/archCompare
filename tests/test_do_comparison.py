@@ -23,29 +23,11 @@ class TestClass():
     configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../archCompare/config/')
     t_json=configdir+'compareMethods.json'
     cmp_type=['data']
-    file_dict={'samplea.caveman_c.annot.vcf.gz':[t_filea,'samplea.caveman_c.annot.vcf.gz','.vcf.gz']}
 
     format_dir_bamdiffA={'samplea.bam': [t_dirbamA+'/samplea.bam', 'samplea.bam', '.bam',73060]}
     format_dir_bamdiffB={'samplea.bam': [t_dirbamB+'/samplea.bam', 'samplea.bam', '.bam',73060]}
     common_files_bamdiff=['samplea.bam']
     bamdiff_result={('diffs','samplea.bam'): 'N'}
-
-
-    format_tar_dictA={
-                      'samplea.bam': [cwdpath+'/testA/samplea.bam', 'samplea.bam', '.bam',73060],
-                      'samplea.bam.bai': [cwdpath+'/testA/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
-                      'onlyinA.txt': [cwdpath+'/testA/onlyinA.txt', 'onlyinA.txt', '.txt',0],
-                      'samplea.caveman_c.annot.vcf.gz': [cwdpath+'/testA/vcf_data/samplea.caveman_c.annot.vcf.gz',
-                       'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2060]}
-
-
-    format_tar_dictB={
-                      'samplea.bam': [cwdpath+'/testB/samplea.bam', 'samplea.bam', '.bam',73060],
-                      'samplea.caveman_c.annot.vcf.gz': [cwdpath+'/testB/vcf_data/samplea.caveman_c.annot.vcf.gz',
-                       'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2055],
-                      'samplea.bam.bai': [cwdpath+'/testB/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
-                      'onlyinB.txt': [cwdpath+'/testB/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
-
 
     format_dir_dictA={
                   'samplea.bam': [t_foldera+'/samplea.bam', 'samplea.bam', '.bam',73060],
@@ -61,9 +43,7 @@ class TestClass():
                   'samplea.bam.bai': [t_folderb+'/samplea.bam.bai', 'samplea.bam.bai', '.bai',8536],
                   'onlyinB.txt': [t_folderb+'/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
 
-    common_inAB=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']
-    only_inA=['onlyinA.txt']
-    only_inB=['onlyinB.txt']
+    common_files=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']
 
     name_cmp_dict={('name','samplea.bam.bai'): 'Y',
                     ('name','samplea.caveman_c.annot.vcf.gz'): 'Y',
@@ -83,7 +63,6 @@ class TestClass():
                 ('size','samplea.bam'): 'Y'
                     }
 
-    common_files=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']
 
 
     @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")

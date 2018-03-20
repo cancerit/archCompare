@@ -34,7 +34,7 @@ the driver code.
 
 ### cgpCompare
 
-Takes the input archives, files, folders and does the comparison for matching file types based on tools defined in `archCompare/config/*.json` file.
+Takes the input archives, files, folders and does the comparison for matching file types based on tools defined in `archCompare/config/CompareMethods.json` file.
 
 Valid input types include:
 
@@ -46,10 +46,9 @@ The output is a tab separated columns containing:
 
 * `File_a`  - compared file name  from first archive
 * `File_b`  - compared file name  from second archive
-* `Status`  - comparsion status [ compared, skipped ]
-* `SimilarityBy` - if files are compared and found similar it will have one of the value [ name, data or checksum ] otherwise 'differ', reason if files were skipped from comparison
+* `<reportsOn columns>` - if files are compared and found similar it will have one of the value [ Y=similar, N=different, <ReasonForNoComparison> ]
 
-Various exceptions can occur for malformed files.
+Various exceptions can occur for malformed files and will  be reported in log file
 
 ## INSTALL
 
