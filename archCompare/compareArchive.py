@@ -251,7 +251,7 @@ class ArchCompare(AbstractCompare):
             log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
             return 'N'
 
-    def _preprocess_file(self,cmd, **kwargs):
+    def _preprocess_file(self, cmd, **kwargs):
         sm.run_command(cmd.format(**kwargs))
         return kwargs.get('tmp')
 
