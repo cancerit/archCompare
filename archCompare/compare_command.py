@@ -27,13 +27,15 @@ def main():
     optional.add_argument("-o", "--outfile", type=str, dest="outfile",
                           default=None, help="path to outfile file, STOUT if not provided")
 
-    optional.add_argument("-c", "--cmp_type", type=str, dest="cmp_type", required=False,
+    optional.add_argument("-c", "--cmp_type", type=str, nargs='*', dest="cmp_type", required=False,
                           default=None, help="Compariosn type to perform [ \
-                           name: compares archives using file names, \
+                           compares archives using space separated list of paramaters, \
+                           name: perform comparsion based on file name \
+                           size: perform comparsion based on file size \
                            checksum: perform comparsion based on checksum tool defined in json config file \
-                           data: does full data comparison based on tools defined for each extension type in\
-                           .json file's diffs section \
-                           Note- command line option if set overrides default value set in json config file ]")
+                           diffs: does full data comparison based on tools defined for each extension type in\
+                           json file's diffs section \
+                           Note- command line option if set overrides default reportsOn values in json config file ]")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
     optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)

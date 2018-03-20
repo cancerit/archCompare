@@ -50,20 +50,6 @@ class StaticMthods(object):
             path_dict[meta_list[1].replace(prefix, '', 1)] = meta_list
         return path_dict
 
-    def run_command_old(cmd):
-        """ runs command in a shell, returns stdout and exit code"""
-        try:
-            cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=STDOUT,
-                            shell=True, universal_newlines=True, bufsize=-1, executable='/bin/bash')
-            log.info(("running command", cmd))
-            (stdout, stderr) = cmd_obj.communicate()
-            return stdout, cmd_obj.returncode
-        except OSError as oe:
-            log.error(("Unable to run command", cmd, oe.args[0]))
-            return 'Error', 'Error'
-        except subprocess.CalledProcessError as exc:
-            log.error(("Unable to run command", cmd, exe.args[0]))
-
     def run_command(cmd):
         """ runs command in a shell, returns stdout and exit code"""
         if not len(cmd):
@@ -71,7 +57,8 @@ class StaticMthods(object):
         try:
             #To capture standard error in the result, use stderr=subprocess.STDOUT:
             cmd_obj = Popen(cmd, stdin=None, stdout=PIPE, stderr=PIPE,
-                            shell=True, universal_newlines=True, bufsize=-1, close_fds=True, executable='/bin/bash')
+                            shell=True, universal_newlines=True, bufsize=-1,
+                            close_fds=True, executable='/bin/bash')
             log.info(("running command", cmd))
             (out, error) = cmd_obj.communicate()
             return out, error, cmd_obj.returncode
@@ -81,62 +68,38 @@ class StaticMthods(object):
 
     def format_results(results, dicta, dictb, outfile):
         """
-          formats output results as tab separated files
+          formats output results as tab separated file and commandline output
         """
-        table = BeautifulTable(max_width=120)
-        if outfile is not None:
-            f = open(outfile, 'w')
-            f.write('#Filea\tFileb\tStatus\tSimilarityBy\n')
-        else:
-            table.column_headers = ['#Filea', 'Fileb', 'Status', 'SimilarityBy']
-        for key, value in results.items():
-            if value[1] is None:
-                value[1] = 'differ'
-            row_val = "{}\t{}\t{}\t{}".format(dicta.get(key, ['NA'])[0],
-                                            dictb.get(key, ['NA'])[0], value[0], value[1])
-            if outfile is None:
-                table.append_row(row_val.split("\t"))
-            else:
-                f.write(row_val)
+        const_header=['#Filea', 'Fileb']
+        (columns,file_key)=([] for i in range(2))
+
+        for comp_n_file, result in results.items():
+            columns.append(comp_n_file[0])
+            file_key.append(comp_n_file[1])
+
+        comp_type=sorted(set(columns))
+        const_header.extend(comp_type)
+        table = BeautifulTable(max_width=200)
+        table.column_headers = const_header
+
+        if outfile:
+            try:
+                f = open(outfile, 'w')
+                f.write('\t'.join(const_header)+'\n')
+            except IOError as ioe:
+                    sys.exit('Can not create outfile:{}'.format(ioe.args[0]))
+        for file_key_val in sorted(set(file_key)):
+            row_data=[]
+            row_data=[dicta.get(file_key_val,['NA'])[0], dictb.get(file_key_val,['NA'])[0]]
+            for cmp in comp_type:
+                res=results.get((cmp,file_key_val),'N')
+                row_data.extend([res])
+            table.append_row(row_data)
+            if outfile:
+                f.write('\t'.join(row_data)+'\n')
         if outfile is None:
-            table.sort(2)
+            table.sort(1)
             table.auto_calculate_width()
             print(table)
-
-    def do_checksum_comaprison(prog, **kwargs):
-        """
-          peforms checksum comparison and
-          returns checksum [identical] or None [different checksum values]
-        """
-        cmd = r'{checksum} {filea} {fileb}'
-        kwargs['checksum'] = prog
-        (out, error, exitcode) = StaticMthods.run_command(cmd.format(**kwargs))
-        out_msg = re.split('\n|\s', out)
-        if out == 'Error':
-            return out, error, exitcode
-        elif exitcode==0 and out_msg[0] == out_msg[3]:
-            return 'checksum', error, exitcode
         else:
-            return 'differ', error, exitcode
-
-    def get_vcf_diff(stdout, exp_out):
-        """
-          compres two vcf file and returns
-          data [identical file content] or None [differences in file]
-        """
-        out_msg = stdout.split("\n")
-        for line in out_msg:
-            if not line:  # skip empty lines
-                continue
-            try:
-                match = re.search(exp_out, line)
-                if match:  # if match not found return true
-                     if match.group(0) == '##contig=':
-                         return
-                     #match[0] == '##contig=' # matches only when contigs are different in two vcf files
-                else:
-                    print("First non matching line found:\n", line)
-                    return
-            except re.error:
-                print('Error in regular expression:{}'.format(re.error))
-        return 'data'
+            f.close()

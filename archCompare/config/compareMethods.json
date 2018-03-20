@@ -5,19 +5,19 @@
   ],
   "globals": {
     "_#comment": [
-      "exitOn determines which types of mismatch to exit on immediately, can be empty array",
+      "exitOn determines which types of mismatch to exit on immediately, can be an empty array",
       "reportOn is the things to be in the final report",
-      "reportOn values: file, size, diffs, checksum",
+      "reportOn values: name, size, diffs, checksum",
       "checksum_tool: e.g., md5,sha1sum",
       "ignore_prefix_for_ext: ignores common prefix for list of file extensions, list should match with diffs",
       "default_comparison: default comparison type to perform",
       "If no diffs entry for a file extension compare based on: size, md5, sha1"
     ],
     "exitOn": ["diffs"],
-    "reportOn": ["file", "size"],
-    "checksum_tool": "md5",
+    "reportOn": ["diffs"],
+    "checksum_tool": "md5sum",
     "ignore_prefix_for_ext":[],
-    "default_comparison": "name"
+    "debug": 0
   },
   "preprocessors": {
     "_#comment": [
@@ -28,11 +28,11 @@
     ],
     ".vcf.gz": {
       "preprocess": "zcat {file} | cut -f 3 --complement > {tmp}",
-      "then": "vcf"
+      "then": ".vcf"
     },
     ".vcf": {
       "preprocess": "cut -f 3 --complement {file} > {tmp}",
-      "then": "vcf"
+      "then": ".vcf"
     }
   },
   "diffs": {
@@ -69,7 +69,17 @@
       ],
       "cmd": "diff_bams -a {filea} -b {fileb} -r /pathToNonArchFile/genome.fa",
       "check": "stderr",
-      "bad_re": ["Reference sequence count is different", "Files differ at record"]
+      "bad_re": ["Reference sequence count is different","Files differ at record"]
+    },
+    ".bam": {
+      "_#comment": [
+        "If any additional files are needed from outside the archive they should",
+        "be defined releative to execution or as absolute paths and explicitly set",
+        "in commands"
+      ],
+      "cmd": "diff_bams -a {filea} -b {fileb}",
+      "check": "stderr",
+      "bad_re": ["Reference sequence count is different","Files differ at record"]
     }
   }
 }
