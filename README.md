@@ -36,6 +36,9 @@ the driver code.
 
 Takes the input archives, files, folders and does the comparison for matching file types based on tools defined in `archCompare/config/CompareMethods.json` file.
 
+Warning:Please make sure all the tools referred in the diffs section of `CompareMethods.json` file are present in your environment
+
+
 Valid input types include:
 
 * .tar - archive containing multiple files and folders to compare

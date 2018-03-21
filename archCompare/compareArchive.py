@@ -5,7 +5,7 @@ import sys
 import tempfile
 import re
 import logging.config
-import collections
+import shutil
 from sys import stderr
 from archCompare.abstractArchive import AbstractCompare
 from archCompare.staticMethods import StaticMthods as sm
@@ -53,7 +53,7 @@ class ArchCompare(AbstractCompare):
             if self.json_file is None:
                 self.json_file = json_config
             with open(self.json_file, 'r') as cfgfile:
-                self.cfg=json.load(cfgfile)
+                self.cfg = json.load(cfgfile)
                 self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
                 self.debug = self.cfg['globals']['debug']
                 self.checksum_type = self.cfg['globals']['checksum_tool']
@@ -65,12 +65,13 @@ class ArchCompare(AbstractCompare):
             sys.exit('json error:{}'.format(jde.args[0]))
         except FileNotFoundError as fne:
             sys.exit('Can not find json file:{}'.format(fne.args[0]))
+        self.cleanup = []
 
-    def _format_input(self, ftype,file_path):
+    def _format_input(self, ftype, file_path):
         """
           accessory method to call other input formatting methods
         """
-        if ftype=='file':
+        if ftype == 'file':
             return self._format_file_input(file_path)
         elif ftype == 'tar':
             return self._format_tar_input(file_path)
@@ -95,6 +96,7 @@ class ArchCompare(AbstractCompare):
             if len(set(self.cmp_type) & set(['diffs', 'checksum'])) > 0:
                 log.info('Extracting tar file for data comparison, this might take a while ....')
                 tmp_path = tempfile.mkdtemp(dir=".")
+                self.cleanup.extend(tmp_path)
                 tar.extractall(path=tmp_path)
                 log.info(('Archive extraction completed at:', file_path))
                 return self._format_dir_input(tmp_path)
@@ -180,6 +182,7 @@ class ArchCompare(AbstractCompare):
         preprocessors_dict = self.cfg['preprocessors']
         json_data = self.cfg['diffs']
         tmp_dir = tempfile.mkdtemp(dir=".")
+        self.cleanup.extend(tmp_dir)
         for file_key in common_files:
             filea, _, ext_filea, sizea = (dictA[file_key])
             fileb, _, _, sizeb = (dictB[file_key])
@@ -315,6 +318,20 @@ class ArchCompare(AbstractCompare):
         """
         return [(l, m.group(1)) for l in outlist for m in (lookupval(l),) if m]
 
+    def cleantemp(self):
+        """
+            clean temporary generated paths at the end
+            make sure . and .. is not included
+        """
+        if self.remove_tmp:
+            for tmp_f in self.cleanup:
+                if os.path.exists(tmp_f) and (rmp_f != "." or rmp_f != ".."):
+                    shutil.rmtree(tmp_f)
+                else:
+                    log.error("file doesn't exists for cleanup:{}".format(tmp_f))
+        else:
+            log.info("clean up flag false, tmporary data not cleaned")
+
     def run_comparison(self):
         """
           method to run the complete comparison
@@ -324,3 +341,4 @@ class ArchCompare(AbstractCompare):
         dictb = self._format_input(typeb, self.file_b)
         results = self._get_sets_to_compare(dicta, dictb)
         sm.format_results(results, dicta, dictb, self.outfile)
+        self.cleatemp()

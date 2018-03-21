@@ -38,6 +38,9 @@ def main():
                            Note- command line option if set overrides default reportsOn \
                            values in json config file ]")
 
+    optional.add_argument("-r", "--remove_tmp", type=int, dest="remove_tmp",
+                          default=1, help="remove tmporary data")
+
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
     optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)
 
