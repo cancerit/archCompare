@@ -66,7 +66,7 @@ class ArchCompare(AbstractCompare):
         except FileNotFoundError as fne:
             sys.exit('Can not find json file:{}'.format(fne.args[0]))
 
-    def _format_input(self, ftype, file_path):
+    def _format_input(self, ftype,file_path):
         """
           accessory method to call other input formatting methods
         """
