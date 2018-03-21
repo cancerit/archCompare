@@ -12,7 +12,8 @@ then
 	against=HEAD
 else
 	# Initial commit: diff against an empty tree object
-	against=388e23de0d3832249de419cb85f274cbf63ff142
+	echo 'No HEAD....exiting.'
+	exit 1
 fi
 
 # If you want to allow non-ASCII filenames set this variable to true.
@@ -44,7 +45,14 @@ fi
 # If there are whitespace errors, print the offending file names and fail.
 git diff-index --check --cached $against --
 code=$?
-../run_tests.sh
+
+if [ "$code" != "0" ]; then
+  exit $code
+
+MYPACKAGE=../archCompare
+pycodestyle \
+$MYPACKAGE
+
 code=$?
 
 if [ "$code" != "0" ]; then
@@ -52,5 +60,4 @@ if [ "$code" != "0" ]; then
 else
 	exit $code
 fi
-
 
