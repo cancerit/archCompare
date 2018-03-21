@@ -24,11 +24,6 @@ class TestClass():
     t_json=configdir+'compareMethods.json'
     cmp_type=['data']
 
-    format_dir_bamdiffA={'samplea.bam': [t_dirbamA+'/samplea.bam', 'samplea.bam', '.bam',73060]}
-    format_dir_bamdiffB={'samplea.bam': [t_dirbamB+'/samplea.bam', 'samplea.bam', '.bam',73060]}
-    common_files_bamdiff=['samplea.bam']
-    bamdiff_result={('diffs','samplea.bam'): 'N'}
-
     format_dir_dictA={
                   'samplea.bam': [t_foldera+'/samplea.bam', 'samplea.bam', '.bam',73060],
                   'samplea.bam.bai': [t_foldera+'/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
@@ -49,11 +44,6 @@ class TestClass():
                     ('name','samplea.caveman_c.annot.vcf.gz'): 'Y',
                     ('name','samplea.bam'): 'Y'
                     }
-    data_cmp_dict={('diffs','samplea.bam.bai'): 'NoExtInJson',
-                ('diffs','samplea.caveman_c.annot.vcf.gz'): 'Y',
-                ('diffs','samplea.bam'): 'Y',
-                ('skipped','onlyinA.txt'): 'onlyInA',
-                ('skipped','onlyinB.txt'): 'onlyInB'}
     checksum_cmp_dict={('checksum','samplea.bam.bai'): 'N',
                 ('checksum','samplea.caveman_c.annot.vcf.gz'): 'N',
                 ('checksum','samplea.bam'): 'N'
@@ -65,17 +55,10 @@ class TestClass():
 
 
 
-    @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")
     def test_do_comparison(self):
         self.maxDiff = None
         my_tar_tar_cmp=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_tarb,json_config=self.t_json,cmp_type=['name'])
         assert self.name_cmp_dict == my_tar_tar_cmp._do_comparison(self.format_dir_dictA,self.format_dir_dictB,self.common_files),'test_do_nameComparison OK'
-
-    @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true", reason="Skipping this test on Travis CI.")
-    def test_bamdiff(self):
-        self.maxDiff = None
-        my_dir_dir_bam=fc.ArchCompare(archive_a=self.t_dirbamA,archive_b=self.t_dirbamB,json_config=self.t_json,cmp_type=['diffs'])
-        assert self.bamdiff_result == my_dir_dir_bam._do_comparison(self.format_dir_bamdiffA,self.format_dir_bamdiffB,self.common_files_bamdiff),'test_do_BamComparison OK'
 
     def test_checksum(self):
         self.maxDiff = None
