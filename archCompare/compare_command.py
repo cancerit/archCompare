@@ -22,7 +22,7 @@ def main():
                           default="", help="archive path for a folder, file or a tar data")
 
     optional.add_argument("-j", "--json_config", type=str, dest="json_config",
-                          default=None, help="path to json config file")
+                          default=None, help="path to json config file, otherwise use config/CompareMethods.json")
 
     optional.add_argument("-o", "--outfile", type=str, dest="outfile",
                           default=None, help="path to outfile file, STOUT if not provided")
@@ -38,8 +38,8 @@ def main():
                            Note- command line option if set overrides default reportsOn \
                            values in json config file ]")
 
-    optional.add_argument("-r", "--remove_tmp", type=int, dest="remove_tmp",
-                          default=1, help="remove tmporary data")
+    optional.add_argument("-r", "--remove_tmp", type=str, dest="remove_tmp", required=False,
+                          default='y', help="remove tmporary data, default is 'y'")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
     optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)
@@ -52,9 +52,6 @@ def main():
     opts = optParser.parse_args()
     if not (opts.archive_a or opts.archive_b):
         sys.exit('\nERROR Arguments required\n\tPlease run: cgpCompare --help\n')
-    mycomp = ArchCompare(archive_a=opts.archive_a,
-                         archive_b=opts.archive_b,
-                         json_config=opts.json_config,
-                         cmp_type=opts.cmp_type,
-                         outfile=opts.outfile)
+    # vars function returns __dict__ of Namespace instance
+    mycomp = ArchCompare(**vars(opts))
     mycomp.run_comparison()

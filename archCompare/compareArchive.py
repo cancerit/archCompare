@@ -96,7 +96,7 @@ class ArchCompare(AbstractCompare):
             if len(set(self.cmp_type) & set(['diffs', 'checksum'])) > 0:
                 log.info('Extracting tar file for data comparison, this might take a while ....')
                 tmp_path = tempfile.mkdtemp(dir=".")
-                self.cleanup.extend(tmp_path)
+                self.cleanup.append(tmp_path)
                 tar.extractall(path=tmp_path)
                 log.info(('Archive extraction completed at:', file_path))
                 return self._format_dir_input(tmp_path)
@@ -182,7 +182,7 @@ class ArchCompare(AbstractCompare):
         preprocessors_dict = self.cfg['preprocessors']
         json_data = self.cfg['diffs']
         tmp_dir = tempfile.mkdtemp(dir=".")
-        self.cleanup.extend(tmp_dir)
+        self.cleanup.append(tmp_dir)
         for file_key in common_files:
             filea, _, ext_filea, sizea = (dictA[file_key])
             fileb, _, _, sizeb = (dictB[file_key])
@@ -323,10 +323,13 @@ class ArchCompare(AbstractCompare):
             clean temporary generated paths at the end
             make sure . and .. is not included
         """
-        if self.remove_tmp:
+        if self.remove_tmp.lower() == 'y' or self.remove_tmp.lower() == 'yes':
             for tmp_f in self.cleanup:
-                if os.path.exists(tmp_f) and (rmp_f != "." or rmp_f != ".."):
+                if tmp_f in ['.', '..', '/']:
+                    continue
+                if os.path.exists(tmp_f):
                     shutil.rmtree(tmp_f)
+                    log.info('removed tmp folder:{}'.format(tmp_f))
                 else:
                     log.error("file doesn't exists for cleanup:{}".format(tmp_f))
         else:
@@ -341,4 +344,4 @@ class ArchCompare(AbstractCompare):
         dictb = self._format_input(typeb, self.file_b)
         results = self._get_sets_to_compare(dicta, dictb)
         sm.format_results(results, dicta, dictb, self.outfile)
-        self.cleatemp()
+        self.cleantemp()

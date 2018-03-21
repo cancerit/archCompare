@@ -12,7 +12,7 @@ class AbstractCompare(ABC):
         self.file_b = kwargs['archive_b']
         self.json_file = kwargs.get('json_config', None)
         self.cmp_type = kwargs.get('cmp_type', None)
-        self.remove_tmp = kwargs.get('remove_tmp', 0)
+        self.remove_tmp = kwargs.get('remove_tmp', None)
         self.outfile = kwargs.get('outfile', None)
         self.get_config()
         super().__init__()
