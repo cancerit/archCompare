@@ -20,9 +20,9 @@ class TestClass():
     t_dirbamA=testdir+'testBamA'
     t_dirbamB=testdir+'testBamB'
     cwdpath=os.getcwd()
-    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
-    t_json=configdir+'fileTypes.json'
-   
+    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../archCompare/config/')
+    t_json=configdir+'compareMethods.json'
+
     def test_dir_file_type(self):
         # check input type function
         my_dir_file=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_filea,json_config=self.t_json)
