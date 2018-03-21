@@ -11,7 +11,7 @@ echo 'Running git hooks'
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
-	against=HEAD
+	against = HEAD
 else
 	# Initial commit: diff against an empty tree object
 	echo 'No HEAD....exiting.'
@@ -19,7 +19,7 @@ else
 fi
 
 # If you want to allow non-ASCII filenames set this variable to true.
-allownonascii=$(git config --bool hooks.allownonascii)
+allownonascii = $(git config --bool hooks.allownonascii)
 
 # Redirect output to stderr.
 exec 1>&2
@@ -46,21 +46,22 @@ fi
 
 # If there are whitespace errors, print the offending file names and fail.
 git diff-index --check --cached $against --
+code = $?
+
+if [ "$code" != "0" ]
+	then
+		exit $code
+fi
+
+MYPACKAGE=archCompare
+#git diff --cached --name-only --diff-filter=ACM | xargs -I {} pycodestyle {}
+pycodestyle $MYPACKAGE
+
 code=$?
 
-if [ "$code" != "0" ]; then
-  exit $code
-
-MYPACKAGE=../archCompare
-pycodestyle \
-$MYPACKAGE
-
-code=$?
-
-if [ "$code" != "0" ]; then
-  exit $code
-else
-	exit $code
+if [ "$code" != "0" ]
+	then
+		exit $code
 fi
 
 echo 'Finished Running git hooks'

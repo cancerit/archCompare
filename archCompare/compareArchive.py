@@ -53,7 +53,7 @@ class ArchCompare(AbstractCompare):
             if self.json_file is None:
                 self.json_file = json_config
             with open(self.json_file, 'r') as cfgfile:
-                self.cfg = json.load(cfgfile)
+                self.cfg=json.load(cfgfile)
                 self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
                 self.debug = self.cfg['globals']['debug']
                 self.checksum_type = self.cfg['globals']['checksum_tool']
