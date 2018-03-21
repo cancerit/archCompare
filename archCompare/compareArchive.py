@@ -70,7 +70,7 @@ class ArchCompare(AbstractCompare):
         """
           accessory method to call other input formatting methods
         """
-        if ftype == 'file':
+        if ftype=='file':
             return self._format_file_input(file_path)
         elif ftype == 'tar':
             return self._format_tar_input(file_path)
