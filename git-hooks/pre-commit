@@ -54,7 +54,6 @@ if [ "$code" != "0" ]
 fi
 
 MYPACKAGE=archCompare
-#git diff --cached --name-only --diff-filter=ACM | xargs -I {} pycodestyle {}
 pycodestyle $MYPACKAGE
 
 code=$?

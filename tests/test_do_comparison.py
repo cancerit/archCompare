@@ -20,8 +20,8 @@ class TestClass():
     t_dirbamA=testdir+'testBamA'
     t_dirbamB=testdir+'testBamB'
     cwdpath=os.getcwd()
-    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../archCompare/config/')
-    t_json=configdir+'compareMethods.json'
+    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
+    t_json = configdir + 'test.json'
     cmp_type=['data']
 
     format_dir_dictA={
@@ -40,22 +40,22 @@ class TestClass():
 
     common_files=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']
 
-    name_cmp_dict={('name','samplea.bam.bai'): 'Y',
-                    ('name','samplea.caveman_c.annot.vcf.gz'): 'Y',
-                    ('name','samplea.bam'): 'Y'
+    name_cmp_dict={('name','samplea.bam.bai'): 'PASS',
+                    ('name','samplea.caveman_c.annot.vcf.gz'): 'PASS',
+                    ('name','samplea.bam'): 'PASS'
                     }
-    checksum_cmp_dict={('checksum','samplea.bam.bai'): 'N',
-                ('checksum','samplea.caveman_c.annot.vcf.gz'): 'N',
-                ('checksum','samplea.bam'): 'N'
+    checksum_cmp_dict={('checksum','samplea.bam.bai'): 'FAIL',
+                ('checksum','samplea.caveman_c.annot.vcf.gz'): 'FAIL',
+                ('checksum','samplea.bam'): 'FAIL'
                     }
-    size_cmp_dict={('size','samplea.bam.bai'): 'Y',
-                ('size','samplea.caveman_c.annot.vcf.gz'): 'N',
-                ('size','samplea.bam'): 'Y'
+    size_cmp_dict={('size','samplea.bam.bai'): 'PASS',
+                ('size','samplea.caveman_c.annot.vcf.gz'): 'FAIL',
+                ('size','samplea.bam'): 'PASS'
                     }
 
 
 
-    def test_do_comparison(self):
+    def test_checksum(self):
         self.maxDiff = None
         my_tar_tar_cmp=fc.ArchCompare(archive_a=self.t_tara,archive_b=self.t_tarb,json_config=self.t_json,cmp_type=['name'])
         assert self.name_cmp_dict == my_tar_tar_cmp._do_comparison(self.format_dir_dictA,self.format_dir_dictB,self.common_files),'test_do_nameComparison OK'

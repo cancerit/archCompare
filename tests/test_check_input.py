@@ -20,8 +20,8 @@ class TestClass():
     t_dirbamA=testdir+'testBamA'
     t_dirbamB=testdir+'testBamB'
     cwdpath=os.getcwd()
-    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../archCompare/config/')
-    t_json=configdir+'compareMethods.json'
+    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
+    t_json=configdir+'test.json'
 
     def test_dir_file_type(self):
         # check input type function

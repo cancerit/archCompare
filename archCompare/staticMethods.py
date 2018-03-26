@@ -2,14 +2,11 @@ import sys
 import os
 import tarfile
 from subprocess import Popen, PIPE, STDOUT
-import shlex
-import re
 import logging.config
 from beautifultable import BeautifulTable
 
 configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
 log_config = configdir + 'logging.conf'
-json_config = configdir + 'fileTypes.json'
 logging.config.fileConfig(log_config)
 
 log = logging.getLogger('compareArchive')
@@ -62,8 +59,8 @@ class StaticMthods(object):
             (out, error) = cmd_obj.communicate()
             return out, error, cmd_obj.returncode
         except OSError as oe:
-            log.error(("Unable to run command", cmd, oe.args[0]))
-            return 'Error', 'Error', 'Error'
+            log.error("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
+            sys.exit("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
 
     def format_results(results, dicta, dictb, outfile):
         """
@@ -91,7 +88,7 @@ class StaticMthods(object):
             row_data = []
             row_data = [dicta.get(file_key_val, ['NA'])[0], dictb.get(file_key_val, ['NA'])[0]]
             for cmp in comp_type:
-                res = results.get((cmp, file_key_val), 'N')
+                res = results.get((cmp, file_key_val), 'FAIL')
                 row_data.extend([res])
             table.append_row(row_data)
             if outfile:

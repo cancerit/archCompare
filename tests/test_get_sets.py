@@ -20,8 +20,8 @@ class TestClass():
     t_dirbamA=testdir+'testBamA'
     t_dirbamB=testdir+'testBamB'
     cwdpath=os.getcwd()
-    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../archCompare/config/')
-    t_json=configdir+'compareMethods.json'
+    configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
+    t_json = configdir + 'test.json'
 
 
     format_dir_dictA={
@@ -40,9 +40,9 @@ class TestClass():
 
 
 
-    name_cmp_dict={('name','samplea.bam.bai'): 'Y',
-                    ('name','samplea.caveman_c.annot.vcf.gz'): 'Y',
-                    ('name','samplea.bam'): 'Y',
+    name_cmp_dict={('name','samplea.bam.bai'): 'PASS',
+                    ('name','samplea.caveman_c.annot.vcf.gz'): 'PASS',
+                    ('name','samplea.bam'): 'PASS',
                     ('skipped','onlyinA.txt'): 'onlyInA',
                     ('skipped','onlyinB.txt'): 'onlyInB'}
 

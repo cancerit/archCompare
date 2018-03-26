@@ -12,7 +12,6 @@ from archCompare.staticMethods import StaticMthods as sm
 
 configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
 log_config = configdir + 'logging.conf'
-json_config = configdir + 'CompareMethods.json'
 logging.config.fileConfig(log_config)
 
 log = logging.getLogger('compareArchive')
@@ -51,7 +50,7 @@ class ArchCompare(AbstractCompare):
         super().get_config()
         try:
             if self.json_file is None:
-                self.json_file = json_config
+                sys.exit('Json configuration file must be provided')
             with open(self.json_file, 'r') as cfgfile:
                 self.cfg = json.load(cfgfile)
                 self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
@@ -193,12 +192,12 @@ class ArchCompare(AbstractCompare):
                 results_dict['skipped', file_key] = 'IdenticalPath'
                 continue
             if 'name' in self.cmp_type:
-                results_dict['name', file_key] = 'Y'
+                results_dict['name', file_key] = 'PASS'
             if 'size' in self.cmp_type:
                 if sizea == sizeb:
-                    results_dict['size', file_key] = 'Y'
+                    results_dict['size', file_key] = 'PASS'
                 else:
-                    results_dict['size', file_key] = 'N'
+                    results_dict['size', file_key] = 'FAIL'
             if 'checksum' in self.cmp_type:
                 log.info("performig checksum comparison")
                 results_dict['checksum', file_key] = self._do_checksum(filea, fileb)
@@ -224,11 +223,11 @@ class ArchCompare(AbstractCompare):
         if exitcodeb != 0 or exitcodea != 0:
             log.error("outa:{},Errora:{},exitcodea:{}".format(outa, errora, exitcodea))
             log.error("outb:{},Errorb:{},exitcodeb:{}".format(outa, errora, exitcodea))
-            return 'N'
+            return 'FAIL'
         elif outa == outb:
-            return 'Y'
+            return 'PASS'
         else:
-            return 'N'
+            return 'FAIL'
 
     def _process_diff(self, ext_preprocess_dict, ext_dict, json_data, tmp_dir, filea, fileb):
         # check if extension type needs preprocessing of files e.g., vcf.gz
@@ -249,10 +248,10 @@ class ArchCompare(AbstractCompare):
                 return 'NoExtInJson'
         (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
         if out == 'data':
-            return 'Y'
+            return 'PASS'
         else:
             log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
-            return 'N'
+            return 'FAIL'
 
     def _preprocess_file(self, cmd, **kwargs):
         sm.run_command(cmd.format(**kwargs))
