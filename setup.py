@@ -13,7 +13,7 @@ config = {
     'setup_requires': ['pytest', 'pytest-cov'],
     'install_requires': ['beautifultable'],
     'packages': ['archCompare'],
-    'package_data': {'archCompare': ['config/*.json', 'config/*.conf']},
+    'package_data': {'archCompare': ['../examples/*.json', 'config/*.conf']},
     'entry_points': {
         'console_scripts': ['cgpCompare=archCompare.compare_command:main'],
     }
