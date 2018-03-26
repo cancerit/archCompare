@@ -7,7 +7,6 @@
 * User can request multiple comparsions on command line
 * Output format now contains results for all requested comparsons
 
-
 ## 1.1.4
 
 * Remove `logging` from install_requires as it breaks python3 install
