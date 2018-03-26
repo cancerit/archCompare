@@ -1,5 +1,12 @@
 # CHANGES
 
+## 2.0.0
+* added json config  file as required parameter
+* added cleanup option
+* All `diffs` compariosons will be now handled by user defined json file
+* User can request multiple comparsions on command line
+* Output format now contains results for all requested comparsons
+
 ## 1.1.4
 
 * Remove `logging` from install_requires as it breaks python3 install
