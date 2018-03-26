@@ -48,7 +48,7 @@ The output is a tab separated columns containing:
 
 * `File_a`  - compared file name  from first archive
 * `File_b`  - compared file name  from second archive
-* `<reportsOn columns>` - if files are compared and found similar it will have one of the value [ PASS=similar, FAIL=different, <ReasonForNoComparison> ]
+* `<reportsOn columns>` - if files are compared and found similar it will have one of the value [ PASS=similar, FAIL=different, NA=Not Applicable OR <ReasonForNoComparison> ]
 
 Various exceptions can occur for malformed files and will  be reported in log file
 

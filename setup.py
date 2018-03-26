@@ -3,7 +3,7 @@
 from setuptools import setup
 
 config = {
-    'version': '1.1.4',
+    'version': '2.0.0',
     'name': 'archCompare',
     'description': 'tool to comapre files and/or archives',
     'author': 'Shriram G Bhosle',

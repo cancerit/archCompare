@@ -75,7 +75,7 @@ class StaticMthods(object):
 
         comp_type = sorted(set(columns))
         const_header.extend(comp_type)
-        table = BeautifulTable(max_width=200)
+        table = BeautifulTable(max_width=125)
         table.column_headers = const_header
 
         if outfile:
@@ -88,7 +88,7 @@ class StaticMthods(object):
             row_data = []
             row_data = [dicta.get(file_key_val, ['NA'])[0], dictb.get(file_key_val, ['NA'])[0]]
             for cmp in comp_type:
-                res = results.get((cmp, file_key_val), 'FAIL')
+                res = results.get((cmp, file_key_val), 'NA')
                 row_data.extend([res])
             table.append_row(row_data)
             if outfile:
