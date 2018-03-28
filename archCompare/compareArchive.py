@@ -54,6 +54,8 @@ class ArchCompare(AbstractCompare):
             with open(self.json_file, 'r') as cfgfile:
                 self.cfg = json.load(cfgfile)
                 self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
+                self.ignore_ext = self.cfg['globals']['ignore_ext']
+                self.guess_ext_dict = self.cfg['globals']['guess_ext']
                 self.debug = self.cfg['globals']['debug']
                 self.checksum_type = self.cfg['globals']['checksum_tool']
                 self.exiton = self.cfg['globals']['exitOn']
@@ -187,6 +189,10 @@ class ArchCompare(AbstractCompare):
             fileb, _, _, sizeb = (dictB[file_key])
             ext_dict = json_data.get(ext_filea, None)
             ext_preprocess_dict = preprocessors_dict.get(ext_filea, None)
+
+            if ext_filea in self.ignore_ext:
+                results_dict['skipped', file_key] = 'IgnoredExt'
+                continue
             if filea == fileb:
                 log.info("Files have identical paths, skipping comaprison filea:{}fileb:{}".format(filea, fileb))
                 results_dict['skipped', file_key] = 'IdenticalPath'
@@ -203,9 +209,9 @@ class ArchCompare(AbstractCompare):
                 results_dict['checksum', file_key] = self._do_checksum(filea, fileb)
                 if 'checksum' in self.exiton:
                     continue
-            if 'diffs' in self.cmp_type and ext_dict is None and ext_preprocess_dict is None:
-                results_dict['diffs', file_key] = 'NoExtInJson'
-                continue
+            if 'diffs' in self.cmp_type and ext_dict is None and ext_preprocess_dict is None and ext_filea:
+                    results_dict['diffs', file_key] = 'NoExtInJson'
+                    continue
             elif 'diffs' in self.cmp_type:
                 log.info("performig Data comparison for ext:{}".format(ext_filea))
                 results_dict['diffs', file_key] = self._process_diff(ext_preprocess_dict, ext_dict,
@@ -213,6 +219,14 @@ class ArchCompare(AbstractCompare):
                                                                      filea, fileb)
 
         return results_dict
+
+    def _guess_ext(self, filea):
+        cmd = r'file  -b --mime-type   {file}'
+        kwargs = {'file': filea}
+        (out, error, exitcode) = sm.run_command(cmd.format(**kwargs))
+        out = out.strip()
+        new_ext = self.guess_ext_dict[out]
+        return new_ext
 
     def _do_checksum(self, filea, fileb):
         cmd = r'{checksum} {file}'
@@ -246,12 +260,18 @@ class ArchCompare(AbstractCompare):
             ext_dict = json_data.get(ext_filea, None)
             if ext_dict is None:
                 return 'NoExtInJson'
-        (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
-        if out == 'data':
-            return 'PASS'
+        elif ext_dict is None:
+            ext_filea = self._guess_ext(filea)
+            ext_dict = json_data.get(ext_filea, None)
+        if ext_dict:
+            (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
+            if out == 'data':
+                return 'PASS'
+            else:
+                log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
+                return 'FAIL'
         else:
-            log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
-            return 'FAIL'
+            return 'NoExtInJson'
 
     def _preprocess_file(self, cmd, **kwargs):
         sm.run_command(cmd.format(**kwargs))
@@ -289,6 +309,9 @@ class ArchCompare(AbstractCompare):
                 print("out:{} error:{} exitcode:{}".format(out, error, exitcode))
             if (len(matches) > 0):
                 return 'data', error, exitcode
+            else:
+                return out, error, exitcode
+
         elif bad_re and check_type == 'stderr':
             errlist = error.split("\n")
             badregex = re.compile(bad_re).search
@@ -300,6 +323,7 @@ class ArchCompare(AbstractCompare):
                 return out, error, exitcode
             else:
                 return 'data', error, exitcode
+
         elif check_type == 'exit-code':
             if exitcode == 0:
                 if self.debug:
