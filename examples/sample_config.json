@@ -10,14 +10,24 @@
       "reportOn values: name, size, diffs, checksum",
       "checksum_tool: e.g., md5,sha1sum",
       "ignore_prefix_for_ext: ignores common prefix for list of file extensions, list should match with diffs",
-      "default_comparison: default comparison type to perform",
+      "default_comparison: as  defined in reportOn",
+      "ignore_ext: ignore files with this extension between final '.' and end of name",
+      "guess_ext: Guess file type using unix 'file' command and match results with the output key to get extension",
       "If no diffs entry for a file extension compare based on: size, md5, sha1"
+
     ],
     "exitOn": ["diffs"],
     "reportOn": ["diffs"],
     "checksum_tool": "md5sum",
     "ignore_prefix_for_ext":[],
-    "debug": 0
+    "debug": 0,
+    "ignore_ext": [".gz.tbi", ".tbi", ".bam.bai", ".bam.csi", ".bam.crai"],
+    "guess_ext": {
+      "application/octet-stream": "NA",
+      "application/x-gzip": ".gz",
+      "text/plain": ".txt"
+    }
+
   },
   "preprocessors": {
     "_#comment": [
@@ -44,6 +54,13 @@
       "bad_re: array of regex to search for in {check} to indicate FAIL",
       "  - pass & *_re are exclusive options"
     ],
+    ".gz": {
+      "_#comment": [
+        "Use of standard diff command, fail when non-zero exit code"
+      ],
+      "cmd": "zdiff -q {filea} {fileb}",
+      "check": "exit-code"
+    },
     ".txt": {
       "_#comment": [
         "Use of standard diff command, fail when non-zero exit code"
