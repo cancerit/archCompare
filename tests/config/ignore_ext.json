@@ -1,0 +1,102 @@
+{
+  "_#comment": [
+    "Only allow fields listed, not _comment1/2/3 use an array of '_#comment'",
+    "This file shouldn't be included in the package unless trimmed to only basic unix commands"
+  ],
+  "globals": {
+    "_#comment": [
+      "exitOn determines which types of mismatch to exit on immediately, can be an empty array",
+      "reportOn is the things to be in the final report",
+      "reportOn values: name, size, diffs, checksum",
+      "checksum_tool: e.g., md5,sha1sum",
+      "ignore_prefix_for_ext: ignores common prefix for list of file extensions, list should match with diffs",
+      "default_comparison: as  defined in reportOn",
+      "ignore_ext: ignore files with this extension between final '.' and end of name",
+      "guess_ext: Guess file type using unix 'file' command and match results with the output key to get extension",
+      "If no diffs entry for a file extension compare based on: size, md5, sha1"
+
+    ],
+    "exitOn": ["diffs"],
+    "reportOn": ["diffs"],
+    "checksum_tool": "md5sum",
+    "ignore_prefix_for_ext":[],
+    "debug": 0,
+    "ignore_ext": [".bam", ".gz.tbi", ".tbi", ".bam.bai", ".bam.csi", ".bam.crai"],
+    "guess_ext": {
+      "application/octet-stream": "NA",
+      "application/x-gzip": ".gz",
+      "text/plain": ".txt"
+    }
+
+  },
+  "preprocessors": {
+    "_#comment": [
+      "Preprocess both filea and fileb, then run the diff defined by diffs.{then} extension",
+      "Extension provided as key is replaced by extension in 'then' when naming 'tmp'",
+      "This is just an example of a pre-processor, if zdiff works use it",
+      "then: always links to diffs section"
+    ],
+    ".vcf.gz": {
+      "preprocess": "zcat {file} | cut -f 3 --complement > {tmp}",
+      "then": ".vcf"
+    },
+    ".vcf": {
+      "preprocess": "cut -f 3 --complement {file} > {tmp}",
+      "then": ".vcf"
+    }
+  },
+  "diffs": {
+    "_#comment": [
+      "cmd: command to execute, capture stdout, stderr and exitcode",
+      "check: which element of command you need to interrogate",
+      "pass: array of PASS exit-codes, absence defaults to [0] as expected response from a simple diff",
+      "good_re: array of regex to search for in {check} to indicate PASS",
+      "bad_re: array of regex to search for in {check} to indicate FAIL",
+      "  - pass & *_re are exclusive options"
+    ],
+    ".gz": {
+      "_#comment": [
+        "Use of standard diff command, fail when non-zero exit code"
+      ],
+      "cmd": "zdiff -q {filea} {fileb}",
+      "check": "exit-code"
+    },
+    ".txt": {
+      "_#comment": [
+        "Use of standard diff command, fail when non-zero exit code"
+      ],
+      "cmd": "diff -q {filea} {fileb}",
+      "check": "exit-code"
+    },
+    ".vcf": {
+      "_#comment": [
+        "Use of standard diff command which is expected to have differences",
+        "that are not a problem and can be filtered to give a final line count",
+        "of '0'"
+      ],
+      "cmd": "diff -y --suppress-common-lines {filea} {fileb} | grep -cvE '^##'",
+      "check": "stdout",
+      "good_re": ["0"]
+    },
+    ".cram": {
+      "_#comment": [
+        "If any additional files are needed from outside the archive they should",
+        "be defined releative to execution or as absolute paths and explicitly set",
+        "in commands"
+      ],
+      "cmd": "diff_bams -a {filea} -b {fileb} -r /pathToNonArchFile/genome.fa",
+      "check": "stderr",
+      "bad_re": ["Reference sequence count is different","Files differ at record"]
+    },
+    ".bam": {
+      "_#comment": [
+        "If any additional files are needed from outside the archive they should",
+        "be defined releative to execution or as absolute paths and explicitly set",
+        "in commands"
+      ],
+      "cmd": "diff_bams -a {filea} -b {fileb}",
+      "check": "stderr",
+      "bad_re": ["Reference sequence count is different","Files differ at record"]
+    }
+  }
+}

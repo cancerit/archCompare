@@ -32,6 +32,7 @@ class TestClass():
                       'samplea.bam': [cwdpath+'/testA/samplea.bam', 'samplea.bam', '.bam',73060],
                       'samplea.bam.bai': [cwdpath+'/testA/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
                       'onlyinA.txt': [cwdpath+'/testA/onlyinA.txt', 'onlyinA.txt', '.txt',0],
+                      'no_ext_file': [cwdpath + '/testA/no_ext_file', 'no_ext_file', '', 42],
                       'samplea.caveman_c.annot.vcf.gz': [cwdpath+'/testA/vcf_data/samplea.caveman_c.annot.vcf.gz',
                        'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2060]}
 
@@ -40,12 +41,14 @@ class TestClass():
                       'samplea.caveman_c.annot.vcf.gz': [cwdpath+'/testB/vcf_data/samplea.caveman_c.annot.vcf.gz',
                        'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2055],
                       'samplea.bam.bai': [cwdpath+'/testB/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
+                      'no_ext_file': [cwdpath + '/testB/no_ext_file', 'no_ext_file', '', 42],
                       'onlyinB.txt': [cwdpath+'/testB/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
 
     format_dir_dictA={
                       'samplea.bam': [t_foldera+'/samplea.bam', 'samplea.bam', '.bam',73060],
                       'samplea.bam.bai': [t_foldera+'/samplea.bam.bai', 'samplea.bam.bai', '.bam.bai',8536],
                       'onlyinA.txt': [t_foldera+'/onlyinA.txt', 'onlyinA.txt', '.txt',0],
+                      'no_ext_file': [t_foldera + '/no_ext_file', 'no_ext_file', '', 42],
                       'samplea.caveman_c.annot.vcf.gz': [t_foldera+'/vcf_data/samplea.caveman_c.annot.vcf.gz',
                        'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2060]}
 
@@ -54,6 +57,7 @@ class TestClass():
                       'samplea.caveman_c.annot.vcf.gz': [t_folderb+'/vcf_data/samplea.caveman_c.annot.vcf.gz',
                       'samplea.caveman_c.annot.vcf.gz', '.vcf.gz',2055],
                       'samplea.bam.bai': [t_folderb+'/samplea.bam.bai', 'samplea.bam.bai', '.bai',8536],
+                      'no_ext_file': [t_folderb + '/no_ext_file', 'no_ext_file', '', 42],
                       'onlyinB.txt': [t_folderb+'/onlyinB.txt', 'onlyinB.txt', '.txt',0]}
 
     common_inAB=['samplea.bam', 'samplea.bam.bai', 'samplea.caveman_c.annot.vcf.gz']

@@ -62,6 +62,7 @@ class StaticMthods(object):
             log.error("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
             sys.exit("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
 
+    @staticmethod
     def format_results(results, dicta, dictb, outfile):
         """
           formats output results as tab separated file and commandline output

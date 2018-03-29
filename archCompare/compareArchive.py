@@ -193,6 +193,7 @@ class ArchCompare(AbstractCompare):
             if ext_filea in self.ignore_ext:
                 results_dict['skipped', file_key] = 'IgnoredExt'
                 continue
+
             if filea == fileb:
                 log.info("Files have identical paths, skipping comaprison filea:{}fileb:{}".format(filea, fileb))
                 results_dict['skipped', file_key] = 'IdenticalPath'
