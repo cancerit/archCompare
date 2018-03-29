@@ -23,8 +23,6 @@
     "debug": 0,
     "ignore_ext": [".gz.tbi", ".tbi", ".bam.bai", ".bam.csi", ".bam.crai"],
     "guess_ext": {
-      "application/octet-stream": "NA",
-      "application/x-gzip": ".gz",
       "text/plain": ".txt"
     }
 

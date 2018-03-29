@@ -226,7 +226,7 @@ class ArchCompare(AbstractCompare):
         kwargs = {'file': filea}
         (out, error, exitcode) = sm.run_command(cmd.format(**kwargs))
         out = out.strip()
-        new_ext = self.guess_ext_dict[out]
+        new_ext = self.guess_ext_dict.get(out, "NA")
         return new_ext
 
     def _do_checksum(self, filea, fileb):
