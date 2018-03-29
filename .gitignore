@@ -19,3 +19,4 @@ cover/
 /tmp*
 .nfs*
 test_local
+test_diffs

@@ -116,6 +116,8 @@ class TestClass():
         my_dir_dir_no_ext=fc.ArchCompare(archive_a=self.t_foldera,archive_b=self.t_folderb,json_config=self.t_ignore_ext_json,cmp_type=['diffs'])
         assert self.no_ext_cmp_dict == my_dir_dir_no_ext._do_comparison(self.format_dir_dictA,self.format_dir_dictB,self.common_files),'test_do_no_extComparison OK'
 
+    @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+                        reason="Skipping this test on Travis CI.")
     def test_cmp_output(self):
         self.maxDiff = None
         mystatic_obj = sm.StaticMthods()
