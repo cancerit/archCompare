@@ -1,0 +1,7 @@
+{
+  "tests/test_check_input.py": true,
+  "tests/test_do_comparison.py": true,
+  "tests/test_format_input.py": true,
+  "tests/test_get_file_metadata.py": true,
+  "tests/test_get_sets.py": true
+}

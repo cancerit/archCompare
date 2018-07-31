@@ -12,6 +12,7 @@
       "ignore_prefix_for_ext: ignores common prefix for list of file extensions, list should match with diffs",
       "default_comparison: as  defined in reportOn",
       "ignore_ext: ignore files with this extension between final '.' and end of name",
+      "ignore_file: ignore files with this name, Note:should match whole file name",
       "guess_ext: Guess file type using unix 'file' command and match results with the output key to get extension",
       "If no diffs entry for a file extension compare based on: size, md5, sha1"
 
@@ -19,13 +20,14 @@
     "exitOn": ["diffs"],
     "reportOn": ["diffs"],
     "checksum_tool": "md5sum",
-    "ignore_prefix_for_ext":[],
+    "ignore_prefix_for_ext":[".no_analysis"],
     "debug": 0,
     "ignore_ext": [".bam", ".gz.tbi", ".tbi", ".bam.bai", ".bam.csi", ".bam.crai"],
+    "ignore_file": ["prob_arr"],
     "guess_ext": {
-      "application/octet-stream": "NA",
+      "text/plain": ".txt",
       "application/x-gzip": ".gz",
-      "text/plain": ".txt"
+      "application/octet-stream": "NA"
     }
 
   },
@@ -37,11 +39,11 @@
       "then: always links to diffs section"
     ],
     ".vcf.gz": {
-      "preprocess": "zcat {file} | cut -f 3 --complement > {tmp}",
+      "preprocess": "zgrep -v '^##' {file} | cut -f 3 --complement > {tmp}",
       "then": ".vcf"
     },
     ".vcf": {
-      "preprocess": "cut -f 3 --complement {file} > {tmp}",
+      "preprocess": "zgrep -v '^##' {file} | cut -f 3 --complement > {tmp}",
       "then": ".vcf"
     }
   },
@@ -62,6 +64,13 @@
       "check": "exit-code"
     },
     ".txt": {
+      "_#comment": [
+        "Use of standard diff command, fail when non-zero exit code"
+      ],
+      "cmd": "diff -q {filea} {fileb}",
+      "check": "exit-code"
+    },
+     ".bed": {
       "_#comment": [
         "Use of standard diff command, fail when non-zero exit code"
       ],
