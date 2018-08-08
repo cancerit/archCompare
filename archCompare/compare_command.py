@@ -47,7 +47,7 @@ def main():
                           default='y', help="remove tmporary data, default is 'y'")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
-    optional.add_argument("-q", "--quiet", action="store_false", dest="quiet", default=True)
+    optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=False)
 
     optParser._action_groups.append(optional)
 

@@ -377,5 +377,5 @@ class ArchCompare(AbstractCompare):
         dicta = self._format_input(typea, self.file_a)
         dictb = self._format_input(typeb, self.file_b)
         results = self._get_sets_to_compare(dicta, dictb)
-        sm.format_results(results, dicta, dictb, self.outfile, verbose=self.quiet)
+        sm.format_results(results, dicta, dictb, self.outfile, verbose=self.verbose)
         self.cleantemp()
