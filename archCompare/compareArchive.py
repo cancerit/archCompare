@@ -263,7 +263,6 @@ class ArchCompare(AbstractCompare):
                 return 'NoExtInJson'
         elif ext_dict is None:
             ext_filea = self._guess_ext(filea)
-            # print("file:{} ext:{}".format(filea,ext_filea))
             ext_dict = json_data.get(ext_filea, None)
         if ext_dict:
             (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
@@ -279,7 +278,6 @@ class ArchCompare(AbstractCompare):
         cmd = r'file  -b --mime-type   {file}'
         kwargs = {'file': filea}
         (out, error, exitcode) = sm.run_command(cmd.format(**kwargs))
-        # print("file:{} out:{} err:{} exit:{}".format(filea,out,error,exitcode))
         out = out.strip()
         new_ext = self.guess_ext_dict.get(out, "NA")
         return new_ext

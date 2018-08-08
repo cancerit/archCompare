@@ -12,7 +12,7 @@
       "ignore_prefix_for_ext: ignores common prefix for list of file extensions, list should match with diffs",
       "default_comparison: as  defined in reportOn",
       "ignore_ext: ignore files with this extension between final '.' and end of name",
-      "ignore_file: ignore files with this name, Note:should match whole file name",
+      "ignore_file: ignore files with this name. Note:should match the whole file name",
       "guess_ext: Guess file type using unix 'file' command and match results with the output key to get extension",
       "If no diffs entry for a file extension compare based on: size, md5, sha1"
 
