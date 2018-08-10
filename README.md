@@ -19,7 +19,7 @@ Provides concise information about the archive content using tools defined in th
 		- [Setup VirtualEnv](#setup-virtualenv)
 - [Cutting a release](#cutting-a-release)
 	- [Install via `.whl` (wheel)](#install-via-whl-wheel)
-- [LICENCE](#license)
+- [LICENCE](#licence)
 <!-- /TOC -->
 
 ## Design
@@ -44,7 +44,7 @@ Valid input types include:
 * folder - any folder containing sub folders and files
 * file - any file with extension configured in the user's `json` configuration file
 
-The output is a tab separated columns containing:
+Default output is exit status 0; if verbose option set then tab separated columns containing:
 
 * `File_a`  - compared file name  from first archive
 * `File_b`  - compared file name  from second archive

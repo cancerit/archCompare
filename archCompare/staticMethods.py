@@ -109,4 +109,4 @@ class StaticMthods(object):
         except UnboundLocalError:
             pass
         finally:
-            sys.exit()
+            sys.exit(0)
