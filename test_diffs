@@ -1,0 +1,7 @@
+#Filea	Fileb	diffs	skipped
+/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testA/no_ext_file	/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testB/no_ext_file	PASS	NA
+/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testA/onlyinA.txt	NA	NA	onlyInA
+NA	/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testB/onlyinB.txt	NA	onlyInB
+/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testA/samplea.bam	/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testB/samplea.bam	NA	IgnoredExt
+/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testA/samplea.bam.bai	/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testB/samplea.bam.bai	NA	IgnoredExt
+/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testA/vcf_data/samplea.caveman_c.annot.vcf.gz	/nfs/users/nfs_s/sb43/scripts/archCompare/tests/data/testB/vcf_data/samplea.caveman_c.annot.vcf.gz	PASS	NA

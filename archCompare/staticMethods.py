@@ -2,14 +2,10 @@ import sys
 import os
 import tarfile
 from subprocess import Popen, PIPE, STDOUT
-import logging.config
+import logging
 from beautifultable import BeautifulTable
 
-configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
-log_config = configdir + 'logging.conf'
-logging.config.fileConfig(log_config)
-
-log = logging.getLogger('compareArchive')
+log = logging.getLogger(__name__)
 
 
 class StaticMthods(object):
@@ -62,12 +58,15 @@ class StaticMthods(object):
             log.error("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
             sys.exit("Unable to run command:{} Error:{}".format(cmd, oe.args[0]))
 
-    def format_results(results, dicta, dictb, outfile):
+    @staticmethod
+    def format_results(results, dicta, dictb, outfile, verbose=None):
         """
           formats output results as tab separated file and commandline output
         """
         const_header = ['#Filea', 'Fileb']
         (columns, file_key) = ([] for i in range(2))
+
+        failed_flag = None
 
         for comp_n_file, result in results.items():
             columns.append(comp_n_file[0])
@@ -84,18 +83,30 @@ class StaticMthods(object):
                 f.write('\t'.join(const_header) + '\n')
             except IOError as ioe:
                 sys.exit('Can not create outfile:{}'.format(ioe.args[0]))
+
         for file_key_val in sorted(set(file_key)):
-            row_data = []
             row_data = [dicta.get(file_key_val, ['NA'])[0], dictb.get(file_key_val, ['NA'])[0]]
             for cmp in comp_type:
                 res = results.get((cmp, file_key_val), 'NA')
                 row_data.extend([res])
             table.append_row(row_data)
+
             if outfile:
                 f.write('\t'.join(row_data) + '\n')
-        if outfile is None:
+            if 'FAIL' in row_data:
+                failed_flag = 1
+
+        if verbose and outfile is None:
             table.sort(1)
             table.auto_calculate_width()
             print(table)
-        else:
+
+        if failed_flag:
+            sys.exit(1)
+
+        try:
             f.close()
+        except UnboundLocalError:
+            pass
+        finally:
+            sys.exit()
