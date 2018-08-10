@@ -3,7 +3,7 @@
 ## 2.1.0
 * Added exit status : 0:PASS 1:FAIL 2:Error
 * Comparison on two files can be done irrespective of file name match
-* Added License
+* Added Licence
 * Added verbose option
 
 ## 2.0.0
