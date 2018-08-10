@@ -20,3 +20,4 @@ cover/
 .nfs*
 test_local
 test_diffs
+.pytest_cache

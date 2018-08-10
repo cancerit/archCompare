@@ -145,7 +145,7 @@ pip install --find-links=~/wheels archCompare
 
 Copyright (c) 2017 Genome Research Ltd.
 
-Author: CancerIT <cgpit@sanger.ac.uk>
+Author: Cancer Ageing and Somatic Mutation <cgphelp@sanger.ac.uk>
 
 This file is part of cgpCompare.
 
