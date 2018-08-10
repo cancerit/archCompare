@@ -14,6 +14,7 @@ class AbstractCompare(ABC):
         self.cmp_type = kwargs.get('cmp_type', None)
         self.remove_tmp = kwargs.get('remove_tmp', None)
         self.outfile = kwargs.get('outfile', None)
+        self.verbose = not kwargs.get('verbose', None)
         self.get_config()
         super().__init__()
 

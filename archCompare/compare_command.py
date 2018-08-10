@@ -3,6 +3,12 @@ import sys
 import os
 import argparse
 import pkg_resources
+import logging.config
+
+configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
+log_config = configdir + 'logging.conf'
+logging.config.fileConfig(log_config)
+log = logging.getLogger(__name__)
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 version = pkg_resources.require("archCompare")[0].version
@@ -37,12 +43,11 @@ def main():
                            json file's diffs section \
                            Note- command line option if set overrides default reportsOn \
                            values in json config file ]")
-
     optional.add_argument("-r", "--remove_tmp", type=str, dest="remove_tmp", required=False,
                           default='y', help="remove tmporary data, default is 'y'")
 
     optional.add_argument("-v", "--version", action='version', version='%(prog)s ' + version)
-    optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True)
+    optional.add_argument("-q", "--quiet", action="store_false", dest="verbose", required=False, default=True)
 
     optParser._action_groups.append(optional)
 
@@ -52,6 +57,8 @@ def main():
     opts = optParser.parse_args()
     if not (opts.archive_a or opts.archive_b):
         sys.exit('\nERROR Arguments required\n\tPlease run: cgpCompare --help\n')
+
+    log.info("Comparison started....")
     # vars function returns __dict__ of Namespace instance
     mycomp = ArchCompare(**vars(opts))
     mycomp.run_comparison()

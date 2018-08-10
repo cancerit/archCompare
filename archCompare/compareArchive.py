@@ -4,17 +4,14 @@ import os
 import sys
 import tempfile
 import re
-import logging.config
+import logging
 import shutil
 from sys import stderr
 from archCompare.abstractArchive import AbstractCompare
 from archCompare.staticMethods import StaticMthods as sm
 
-configdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/')
-log_config = configdir + 'logging.conf'
-logging.config.fileConfig(log_config)
 
-log = logging.getLogger('compareArchive')
+log = logging.getLogger(__name__)
 
 '''
 Compare file, folder or archived data in .tar, .gz, .bz2 format
@@ -54,6 +51,9 @@ class ArchCompare(AbstractCompare):
             with open(self.json_file, 'r') as cfgfile:
                 self.cfg = json.load(cfgfile)
                 self.ignore_prefix = self.cfg['globals']['ignore_prefix_for_ext']
+                self.ignore_ext = self.cfg['globals']['ignore_ext']
+                self.ignore_file = self.cfg['globals']['ignore_file']
+                self.guess_ext_dict = self.cfg['globals']['guess_ext']
                 self.debug = self.cfg['globals']['debug']
                 self.checksum_type = self.cfg['globals']['checksum_tool']
                 self.exiton = self.cfg['globals']['exitOn']
@@ -148,7 +148,8 @@ class ArchCompare(AbstractCompare):
         (_, name) = os.path.split(full_file_name)
         (name_no_ext, first_ext) = os.path.splitext(name)
         (_, second_ext) = os.path.splitext(name_no_ext)
-        first_ext = second_ext + first_ext
+        if second_ext not in self.ignore_prefix:
+            first_ext = second_ext + first_ext
         if file_size is None:
             file_size = os.stat(full_file_name).st_size
         return name, first_ext, file_size
@@ -159,16 +160,22 @@ class ArchCompare(AbstractCompare):
           and outputs comparison of resulting sets as requested by user
           returns resuts dictionary containing filekey, comparison status and results if any
         """
-        results_dict = {}
-        common_files = list(set(dictA.keys()) & set(dictB.keys()))
-        only_in_archiveA = list(set(dictA.keys()) - set(dictB.keys()))
-        only_in_archiveB = list(set(dictB.keys()) - set(dictA.keys()))
-        results_dict = self._do_comparison(dictA, dictB, common_files)
-        for file_key in only_in_archiveA:
-            results_dict['skipped', file_key] = 'onlyInA'
-        for file_key in only_in_archiveB:
-            results_dict['skipped', file_key] = 'onlyInB'
-        return results_dict
+        if len(dictA.keys()) == 1 and len(dictB.keys()) == 1:
+            log.info("Doing single file comparison")
+            dictA['tmpfile'] = list(dictA.values())[0]
+            dictB['tmpfile'] = list(dictB.values())[0]
+            common_files = list(set(dictA.keys()) & set(dictB.keys()))
+            return self._do_comparison(dictA, dictB, common_files)
+        else:
+            common_files = list(set(dictA.keys()) & set(dictB.keys()))
+            only_in_archiveA = list(set(dictA.keys()) - set(dictB.keys()))
+            only_in_archiveB = list(set(dictB.keys()) - set(dictA.keys()))
+            results_dict = self._do_comparison(dictA, dictB, common_files)
+            for file_key in only_in_archiveA:
+                results_dict['skipped', file_key] = 'onlyInA'
+            for file_key in only_in_archiveB:
+                results_dict['skipped', file_key] = 'onlyInB'
+            return results_dict
 
     def _do_comparison(self, dictA, dictB, common_files):
         """
@@ -183,10 +190,18 @@ class ArchCompare(AbstractCompare):
         tmp_dir = tempfile.mkdtemp(dir=".")
         self.cleanup.append(tmp_dir)
         for file_key in common_files:
-            filea, _, ext_filea, sizea = (dictA[file_key])
+            # gets full file path,name,ext and size
+            filea, filename_a, ext_filea, sizea = (dictA[file_key])
             fileb, _, _, sizeb = (dictB[file_key])
             ext_dict = json_data.get(ext_filea, None)
             ext_preprocess_dict = preprocessors_dict.get(ext_filea, None)
+
+            if ext_filea in self.ignore_ext:
+                results_dict['skipped', file_key] = 'IgnoredExt'
+                continue
+            if filename_a in self.ignore_file:
+                results_dict['skipped', file_key] = 'IgnoredFile'
+                continue
             if filea == fileb:
                 log.info("Files have identical paths, skipping comaprison filea:{}fileb:{}".format(filea, fileb))
                 results_dict['skipped', file_key] = 'IdenticalPath'
@@ -203,9 +218,9 @@ class ArchCompare(AbstractCompare):
                 results_dict['checksum', file_key] = self._do_checksum(filea, fileb)
                 if 'checksum' in self.exiton:
                     continue
-            if 'diffs' in self.cmp_type and ext_dict is None and ext_preprocess_dict is None:
-                results_dict['diffs', file_key] = 'NoExtInJson'
-                continue
+            if 'diffs' in self.cmp_type and ext_dict is None and ext_preprocess_dict is None and ext_filea:
+                    results_dict['diffs', file_key] = 'NoExtInJson'
+                    continue
             elif 'diffs' in self.cmp_type:
                 log.info("performig Data comparison for ext:{}".format(ext_filea))
                 results_dict['diffs', file_key] = self._process_diff(ext_preprocess_dict, ext_dict,
@@ -246,12 +261,26 @@ class ArchCompare(AbstractCompare):
             ext_dict = json_data.get(ext_filea, None)
             if ext_dict is None:
                 return 'NoExtInJson'
-        (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
-        if out == 'data':
-            return 'PASS'
+        elif ext_dict is None:
+            ext_filea = self._guess_ext(filea)
+            ext_dict = json_data.get(ext_filea, None)
+        if ext_dict:
+            (out, error, exitcode) = self._run_diff(ext_dict, filea=filea, fileb=fileb)
+            if out == 'data':
+                return 'PASS'
+            else:
+                log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
+                return 'FAIL'
         else:
-            log.error("out:{},Error:{},exitcode:{}".format(out, error, exitcode))
-            return 'FAIL'
+            return 'NoExtInJson'
+
+    def _guess_ext(self, filea):
+        cmd = r'file  -b --mime-type   {file}'
+        kwargs = {'file': filea}
+        (out, error, exitcode) = sm.run_command(cmd.format(**kwargs))
+        out = out.strip()
+        new_ext = self.guess_ext_dict.get(out, "NA")
+        return new_ext
 
     def _preprocess_file(self, cmd, **kwargs):
         sm.run_command(cmd.format(**kwargs))
@@ -289,6 +318,9 @@ class ArchCompare(AbstractCompare):
                 print("out:{} error:{} exitcode:{}".format(out, error, exitcode))
             if (len(matches) > 0):
                 return 'data', error, exitcode
+            else:
+                return out, error, exitcode
+
         elif bad_re and check_type == 'stderr':
             errlist = error.split("\n")
             badregex = re.compile(bad_re).search
@@ -300,6 +332,7 @@ class ArchCompare(AbstractCompare):
                 return out, error, exitcode
             else:
                 return 'data', error, exitcode
+
         elif check_type == 'exit-code':
             if exitcode == 0:
                 if self.debug:
@@ -342,5 +375,5 @@ class ArchCompare(AbstractCompare):
         dicta = self._format_input(typea, self.file_a)
         dictb = self._format_input(typeb, self.file_b)
         results = self._get_sets_to_compare(dicta, dictb)
-        sm.format_results(results, dicta, dictb, self.outfile)
+        sm.format_results(results, dicta, dictb, self.outfile, verbose=self.verbose)
         self.cleantemp()

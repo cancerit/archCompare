@@ -40,7 +40,7 @@ class TestClass():
 
 
 
-    name_cmp_dict={('name','samplea.bam.bai'): 'PASS',
+    name_cmp_dict={('skipped','samplea.bam.bai'): 'IgnoredExt',
                     ('name','samplea.caveman_c.annot.vcf.gz'): 'PASS',
                     ('name','samplea.bam'): 'PASS',
                     ('skipped','onlyinA.txt'): 'onlyInA',
